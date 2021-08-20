@@ -56,11 +56,9 @@ canvas{
 	color: #fff;
 	background-color: #585D7D;
 	border-radius: 10px;
-	z-index: 0;
 }
 .slider::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	appearance: none;
 	width: 25px;
 	height: 35px;
 	background: #EEE;

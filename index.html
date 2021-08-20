@@ -12,6 +12,7 @@
 	<div class="container">
 		<canvas></canvas>
 	</div>
+	<p style="color: white; position: absolute; top: 50%; left: 50%;" id="debug"></p>
 	<div class="menu">
 		<h1>Boids simulation</h1>
 		<label>Separation</label>
@@ -32,7 +33,11 @@
 			<button id="spawn" class="button" type="button" style="border-radius: 3px 0 0 3px;">Spawn</button>
 			<button id="despawn" class="button" type="button" style="border-radius: 0 3px 3px 0;">Despawn</button>
 		</div>
-		<p>The highlighted boid has nothing special, it just shows how all the others are seeing the world. <a id="hlToggle" href="#">CLick to toggle highlight</a></p>
+		<div class="buttons">
+			<button id="hlToggle" class="button" type="button" style="border-radius: 3px 0 0 3px;">Highlight</button>
+			<button id="shapeBtn" class="button" type="button" style="border-radius: 0 3px 3px 0;">Shape</button>
+		</div>
+		
 	</div>
 	<script type="text/javascript" src="js/util.js"></script>
 	<script type="text/javascript" src="js/boid.js"></script>

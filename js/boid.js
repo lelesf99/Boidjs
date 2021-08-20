@@ -133,13 +133,23 @@ class Boid {
 		this.acc.add(diff);
 	}
 
-	draw(){
+	draw(shape){
 		this.update();
-		if (this.hl) {
-			drawPoint(this.pos, 10, '#FFAEBC');
-			drawPoint(this.pos, this.senseRadius, '#00000022');
+		if (shape) {
+			if (this.hl) {
+				drawTri(this.pos, this.vel, 18, '#FFAEBC');
+				drawPoint(this.pos, this.senseRadius, '#00000022');
+			} else {
+				drawTri(this.pos, this.vel, 18, '#A0E7E5');
+			}
 		} else {
-			drawPoint(this.pos, 10, '#A0E7E5');
+			if (this.hl) {
+				drawPoint(this.pos, 10, '#FFAEBC');
+				drawPoint(this.pos, this.senseRadius, '#00000022');
+			} else {
+				drawPoint(this.pos, 10, '#A0E7E5');
+			}
 		}
+		
 	}
 }

@@ -53,8 +53,17 @@ class Vector2 {
 		return this;
 	};
 	dot(v) {
-		return this.x * (v.x || 0) + this.y * (v.y || 0);
+		return this.x * v.x + this.y * v.y;
 	};
+	angle(){
+		const o = new Vector2(1, 0);
+		if (this.y < 0) {
+			return - Math.acos(o.dot(new Vector2(this.x, this.y)) / (this.mag()));
+		} else {
+			return Math.acos(o.dot(new Vector2(this.x, this.y)) / (this.mag()));
+		}
+		
+	}
 }
 
 function getRandomArb(min, max) {
@@ -63,9 +72,12 @@ function getRandomArb(min, max) {
 
 var canvas = document.querySelector('canvas');
 var c = canvas.getContext("2d");
+
 canvas.setAttribute('width', window.innerWidth);
 canvas.setAttribute('height', window.innerHeight);
+
 c.lineWidth = 3;
+
 window.addEventListener("resize", () => {
 	canvas.setAttribute('width', window.innerWidth);
 	canvas.setAttribute('height', window.innerHeight);
@@ -78,6 +90,22 @@ function drawPoint(pos, r, color) {
 	c.fill();
 	c.strokeStyle = '#00000033';
 	c.stroke();
+}
+function drawTri(pos, head, size, color) {
+	c.save();
+	c.beginPath();
+	c.translate(pos.x, pos.y);
+	c.rotate(head.angle());
+	c.moveTo(size, 0);
+	c.lineTo(- size, - size / 2);
+	c.lineTo(- size, + size / 2);
+	c.lineTo(size, 0);
+	
+	c.fillStyle = color;
+	c.fill();
+	c.strokeStyle = '#00000033';
+	c.stroke();
+	c.restore();
 }
 function drawLine(a, b) {
 	c.beginPath();

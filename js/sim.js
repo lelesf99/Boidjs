@@ -4,6 +4,7 @@ var intX = canvas.width/2;
 var intY = canvas.height/2;
 var interest = 1;
 var intFac = 0;
+var shape = true;
 
 for (var i = 0; i < 128; i++) {
 	if (i == 0) {
@@ -55,7 +56,7 @@ function animate() {
 		drawPoint(new Vector2(intX, intY), interest, '#FFFFFF33');
 	}
 	for (var i = 0; i < flock.length; i++) {
-		flock[i].draw();
+		flock[i].draw(shape);
 	}
 }
 animate();

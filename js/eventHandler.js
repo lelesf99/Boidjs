@@ -9,6 +9,8 @@ let presSlider = document.querySelector('#precision');
 let addBtn = document.querySelector("#spawn");
 let remBtn = document.querySelector("#despawn");
 
+hlToggle = document.querySelector("#hlToggle");
+shapeBtn = document.querySelector("#shapeBtn");
 
 sepSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
@@ -53,6 +55,14 @@ hlToggle.addEventListener('click', () => {
 	}
 });
 
+shapeBtn.addEventListener('click', () => {
+	if (shape) {
+		shape = false;
+	} else {
+		shape = true;
+	}
+});
+
 addBtn.addEventListener('click', () => {
 	addBoids();
 })
@@ -69,6 +79,7 @@ canvas.addEventListener('mousemove', (event) => {
 		intX = event.clientX;
 		intY = event.clientY;
 	}
+	
 });
 canvas.addEventListener('mouseup', (event) => {
     intFac = -4;
