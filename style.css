@@ -32,6 +32,8 @@ canvas{
 	font-weight: 700;
 	color: #EEE;
 	text-shadow: 2px 2px 2px black;
+	-webkit-touch-callout: none;
+	user-select: none;
 }
 .menu label{
 	font-size: 16pt;
