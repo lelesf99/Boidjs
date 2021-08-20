@@ -14,7 +14,8 @@ canvas{
 	z-index: 10;
 	margin: 10px;
 	padding: 25px;
-	max-width: 500px;
+	width: auto;
+	max-width: 680px;
 	height: 50px;
 	overflow: hidden;
 	cursor: default;
@@ -24,7 +25,7 @@ canvas{
 	transition-timing-function: ease-in-out;
 }
 .menu:hover{
-	height: 600px;
+	height: 700px;
 	background-color: #00000066;
 }
 .menu h1{
@@ -52,8 +53,8 @@ canvas{
 }
 .slider{
 	width: 100%;
-	height: 10px;
-	margin-top: 10px;
+	height: 15px;
+	margin: 10px 0 10px 0;
 	-webkit-appearance: none;
 	color: #fff;
 	background-color: #585D7D;
