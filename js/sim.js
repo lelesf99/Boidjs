@@ -5,14 +5,29 @@ var intY = canvas.height/2;
 var interest = 1;
 var intFac = 0;
 
-for (var i = 0; i < 512; i++) {
+for (var i = 0; i < 128; i++) {
 	if (i == 0) {
 		flock.push(new Boid(new Vector2(Math.random() * canvas.width, Math.random() * canvas.height), true));
 	} else {
 		flock.push(new Boid(new Vector2(Math.random() * canvas.width, Math.random() * canvas.height), false));
 	}
 }
-animate();
+
+function addBoids(){
+	for (var i = 0; i < 64; i++) {
+		if (i == 0 && flock.length == 0) {
+			flock.push(new Boid(new Vector2(Math.random() * canvas.width, Math.random() * canvas.height), true));
+		} else {
+			flock.push(new Boid(new Vector2(Math.random() * canvas.width, Math.random() * canvas.height), false));
+		}
+	}
+}
+function remBoids(){
+	for (var i = 0; i < 64; i++) {
+		flock.pop();
+	}
+}
+
 function animate() {
 	c.clearRect(0, 0, canvas.width, canvas.height);
 	requestAnimationFrame(animate);
@@ -43,3 +58,4 @@ function animate() {
 		flock[i].draw();
 	}
 }
+animate();
