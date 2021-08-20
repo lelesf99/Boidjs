@@ -126,13 +126,11 @@ class Boid {
 				d = 0;
 			}
 		diff.multS(d);
-		tmpD.add(diff);
 
-		tmpD.sub(this.pos);
-		tmpD.setMag(this.maxspeed)
-		tmpD.sub(this.vel);
-		tmpD.limit(this.maxforce * 0.0006 * (d + i));
-		this.acc.add(tmpD);
+		diff.sub(this.pos);
+		diff.sub(this.vel);
+		diff.limit(this.maxforce * 0.000615 * (d));
+		this.acc.add(diff);
 	}
 
 	draw(){

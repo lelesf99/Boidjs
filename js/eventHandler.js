@@ -68,40 +68,17 @@ canvas.addEventListener('mousemove', (event) => {
     if(interest >= 1) {
 		intX = event.clientX;
 		intY = event.clientY;
-
-// 	console.log("Coordinate intX: " + intX, 
-// 	            "Coordinate intY: " + intY,
-// 	            "int: " +  interest);
 	}
 });
 canvas.addEventListener('mouseup', (event) => {
     intFac = -4;
 });
 
-// canvas.addEventListener('touchstart', (event) => {
-//     interest = 100;
-//     intFac = 5;
-// });
-// canvas.addEventListener('touchmove', (event) => {
-//     if(interest >= 1) {
-// 		let rect = canvas.getBoundingClientRect();
-// 	intX = event.clientX - rect.left;
-// 	intY = event.clientY - rect.top;
-
-// // 	console.log("Coordinate intX: " + intX, 
-// // 	            "Coordinate intY: " + intY,
-// // 	            "int: " +  interest);
-// 	}
-// });
-// canvas.addEventListener('touchend', (event) => {
-//     intFac = -4;
-// });
 canvas.addEventListener('touchstart', process_touchstart, false);
 canvas.addEventListener('touchmove', process_touchmove, false);
 canvas.addEventListener('touchend', process_touchend, false);
 
 function process_touchstart(event) {
-	// Set call preventDefault()
 	event.preventDefault();
 	intX = event.touches[0].clientX;
 	intY = event.touches[0].clientY;
@@ -110,7 +87,6 @@ function process_touchstart(event) {
 }
 // touchmove handler
 function process_touchmove(event) {
-	// Set call preventDefault()
 	event.preventDefault();
 	if(interest >= 1) {
 		intX = event.touches[0].clientX;
@@ -118,7 +94,6 @@ function process_touchmove(event) {
 	}
 }
 function process_touchend(event) {
-	// Set call preventDefault()
 	event.preventDefault();
 	intFac = -4;
 }
