@@ -15,7 +15,7 @@ canvas{
 	margin: 10px;
 	padding: 25px;
 	width: auto;
-	max-width: 680px;
+	max-width: 500px;
 	height: 50px;
 	overflow: hidden;
 	cursor: default;
@@ -88,4 +88,26 @@ button:hover{
 }
 button:active{
 	background-color: #FFF;
+}
+@media only screen
+  and (max-device-width: 720px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+  .menu{
+		position: absolute;
+		z-index: 10;
+		margin: 10px;
+		padding: 25px;
+		width: auto;
+		height: 50px;
+		overflow: hidden;
+		cursor: default;
+		border-radius: 5px;
+		background-color: #00000000;
+		transition: all 0.2s;
+		transition-timing-function: ease-in-out;
+	}
+	.menu:active{
+		height: 800px;
+		background-color: #00000066;
+	}
 }
