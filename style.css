@@ -23,7 +23,7 @@ canvas{
 	transition: all 0.2s;
 	transition-timing-function: ease-in-out;
 }
-.menu: hover{
+.menu:hover{
 	height: 600px;
 	background-color: #00000066;
 }
