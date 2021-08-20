@@ -60,9 +60,9 @@ canvas.addEventListener('mousemove', (event) => {
 	intX = event.clientX - rect.left;
 	intY = event.clientY - rect.top;
 
-	console.log("Coordinate intX: " + intX, 
-	            "Coordinate intY: " + intY,
-	            "int: " +  interest);
+// 	console.log("Coordinate intX: " + intX, 
+// 	            "Coordinate intY: " + intY,
+// 	            "int: " +  interest);
 	}
 });
 canvas.addEventListener('mouseup', (event) => {
