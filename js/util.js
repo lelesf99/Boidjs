@@ -13,7 +13,7 @@ class Vector2 {
 		this.y = (this.y - v.y);
 		return this
 	}
-	subV1V2(v1, v2) {
+	static subV1V2(v1, v2) {
 		return new Vector2((v1.x - v2.x), (v1.y - v2.y));
 	}
 	multS(k) {
@@ -55,16 +55,11 @@ class Vector2 {
 	dot(v) {
 		return this.x * v.x + this.y * v.y;
 	};
-	angle(){
-		const o = new Vector2(1, 0);
-		if (this.y < 0) {
-			return - Math.acos(o.dot(new Vector2(this.x, this.y)) / (this.mag()));
-		} else {
-			return Math.acos(o.dot(new Vector2(this.x, this.y)) / (this.mag()));
-		}
+	static angleBetween(v1, v2){
+			return Math.acos(v1.dot(v2) / (v1.mag() * v2.mag()));
 	}
-	angleBetween(v){
-			return Math.acos(this.dot(new Vector2(v.x, v.y)) / (this.mag() * v.mag()));
+	angle(){
+		return (this.y < 0) ? -Vector2.angleBetween(this, new Vector2(1,0)) : Vector2.angleBetween(this, new Vector2(1,0));
 	}
 }
 
@@ -112,7 +107,6 @@ function drawTri(pos, head, size, color) {
 	c.lineTo(- size, - size / 2);
 	c.lineTo(- size, + size / 2);
 	c.lineTo(size, 0);
-	
 	c.fillStyle = color;
 	c.fill();
 	c.strokeStyle = '#00000033';
