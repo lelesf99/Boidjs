@@ -3,11 +3,13 @@ class Boid {
 		this.pos = pos;
 		this.vel = new Vector2((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
 		this.acc = new Vector2(0 ,0);
+		this.preVel = new Vector2(0 ,0);
 		this.localMates = [];
 		this.senseRadius = 165;
 		this.FOV = 120 * Math.PI / 180;
 		this.maxforce = 0.3125;
 		this.maxspeed = 8;
+		this.minspeed = 2;
 		this.alFac = 1;
 		this.cohFac = 1;
 		this.sepFac = 1;	
@@ -30,6 +32,8 @@ class Boid {
 			this.pos.y = canvas.height + 20;
 		}
 
+
+
 		//freewill
 		var freewillF = new Vector2(getRandomArb(-this.freewill/20, this.freewill/20), (getRandomArb(-this.freewill/20, this.freewill/20)));
 		freewillF.limit(this.maxforce);
@@ -37,7 +41,11 @@ class Boid {
 
 		// console.log(this.desire);
 		this.vel.add(this.acc);
+		if (this.vel.mag() <= this.minspeed) {
+			this.vel.setMag(this.minspeed);
+		}
 		this.pos.add(this.vel);
+		this.preVel = this.vel;
 		this.acc.multS(0);
 	}
 

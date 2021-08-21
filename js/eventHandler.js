@@ -20,9 +20,6 @@ sepSlider.addEventListener('input', () => {
 });
 alSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
-		if (alSlider.value <= 30) {
-			alSlider.value = 30
-		}
 		flock[i].alFac = alSlider.value / 50;
 	}
 });
