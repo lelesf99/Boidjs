@@ -44,9 +44,10 @@ function animate() {
 	for (var i = 0; i < flock.length; i++) {
 		flock[i].pushLocalMates(flock, pres);
 		
-		flock[i].separate();
+		
 		flock[i].align();
 		flock[i].cohesion();
+		flock[i].separate();
 		if (interest >= 5) {
 			flock[i].interest(new Vector2(intX, intY),interest);
 		}

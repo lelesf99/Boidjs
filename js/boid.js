@@ -4,14 +4,13 @@ class Boid {
 		this.vel = new Vector2((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
 		this.acc = new Vector2(0 ,0);
 		this.localMates = [];
+		this.senseRadius = 165;
 		this.maxforce = 0.3125;
 		this.maxspeed = 8;
 		this.sepFac = 1;
 		this.alFac = 1;
 		this.cohFac = 1;
-		this.senseRadius = 165;
 		this.freewill = 0;
-		this.localMates = [];
 		this.hl = hl;
 	}
 	update(){
@@ -44,11 +43,11 @@ class Boid {
 	pushLocalMates(otherBoids, pres){
 		for (var i = 0; i < otherBoids.length; i++) {
 			let d = this.pos.dist(otherBoids[i].pos);
-			if (otherBoids[i] != this && d <= this.senseRadius && this.localMates.length <= pres) {
+			if (otherBoids[i] != this  && this.localMates.length <= pres && (d <= this.senseRadius && this.vel.angleBetween(this.pos.subV1V2(otherBoids[i].pos, this.pos)) < 5 * Math.PI / 6 || d <= this.senseRadius/2)) {
 				if (this.hl) {
 					drawLine(this.pos, otherBoids[i].pos);
 				}
-			this.localMates.push(otherBoids[i]);
+				this.localMates.push(otherBoids[i]);
 			}
 		}
 	}
@@ -101,8 +100,8 @@ class Boid {
 		for (var i = this.localMates.length - 1; i >= 0; i--) {
 			let diff = new Vector2().subV1V2(this.pos, this.localMates[i].pos);
 			let d = this.pos.dist(this.localMates[i].pos);
-			if (d < 0.01) {
-				d = 0.0001;
+			if (d == 0) {
+				d = 0.01;
 			}
 			diff.divS(d);
 			tmpD.add(diff);
@@ -113,7 +112,7 @@ class Boid {
 			tmpD.setMag(this.maxspeed);
 			tmpD.sub(this.vel);
 			tmpD.limit(this.maxforce);
-			tmpD.multS(this.sepFac);
+			tmpD.multS(this.sepFac * 1.2);
 			this.acc.add(tmpD);
 		}
 	}
@@ -126,7 +125,6 @@ class Boid {
 				d = 0;
 			}
 		diff.multS(d);
-
 		diff.sub(this.pos);
 		diff.sub(this.vel);
 		diff.limit(this.maxforce * 0.000615 * (d));
@@ -137,15 +135,19 @@ class Boid {
 		this.update();
 		if (shape) {
 			if (this.hl) {
-				drawTri(this.pos, this.vel, 18, '#FFAEBC');
-				drawPoint(this.pos, this.senseRadius, '#00000022');
+				
+				drawPoint(this.pos, this.senseRadius/2, '#00000022');
+				drawSense(this.pos, this.senseRadius, this.vel, 5 * Math.PI / 6, '#00000022');
+				drawTri(this.pos, this.vel, 15, '#FFAEBC');
 			} else {
-				drawTri(this.pos, this.vel, 18, '#A0E7E5');
+				drawTri(this.pos, this.vel, 15, '#A0E7E5');
 			}
 		} else {
 			if (this.hl) {
+				
+				drawPoint(this.pos, this.senseRadius/2, '#00000022');
+				drawSense(this.pos, this.senseRadius, this.vel, 5 * Math.PI / 6, '#00000022');
 				drawPoint(this.pos, 10, '#FFAEBC');
-				drawPoint(this.pos, this.senseRadius, '#00000022');
 			} else {
 				drawPoint(this.pos, 10, '#A0E7E5');
 			}

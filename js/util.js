@@ -62,7 +62,9 @@ class Vector2 {
 		} else {
 			return Math.acos(o.dot(new Vector2(this.x, this.y)) / (this.mag()));
 		}
-		
+	}
+	angleBetween(v){
+			return Math.acos(this.dot(new Vector2(v.x, v.y)) / (this.mag() * v.mag()));
 	}
 }
 
@@ -76,7 +78,7 @@ var c = canvas.getContext("2d");
 canvas.setAttribute('width', window.innerWidth);
 canvas.setAttribute('height', window.innerHeight);
 
-c.lineWidth = 3;
+c.lineWidth = 4;
 
 window.addEventListener("resize", () => {
 	canvas.setAttribute('width', window.innerWidth);
@@ -85,7 +87,17 @@ window.addEventListener("resize", () => {
 
 function drawPoint(pos, r, color) {
 	c.beginPath();
-	c.arc(pos.x, pos.y, r, 0, Math.PI*2);
+	c.arc(pos.x, pos.y, r, r, 0, Math.PI*2);
+	c.fillStyle = color;
+	c.fill();
+	c.strokeStyle = '#00000033';
+	c.stroke();
+}
+function drawSense(pos, r, head, arc, color) {
+	c.beginPath();
+	c.ellipse(pos.x, pos.y, r, r, head.angle(), -arc, arc);
+	c.lineTo(pos.x, pos.y);
+	c.closePath();
 	c.fillStyle = color;
 	c.fill();
 	c.strokeStyle = '#00000033';
