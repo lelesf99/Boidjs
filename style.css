@@ -25,7 +25,7 @@ canvas{
 	transition-timing-function: ease-in-out;
 }
 .menu:hover{
-	height: 700px;
+	height: 750px;
 	background-color: #00000066;
 }
 .menu h1{

@@ -5,6 +5,7 @@ class Boid {
 		this.acc = new Vector2(0 ,0);
 		this.localMates = [];
 		this.senseRadius = 165;
+		this.FOV = 120 * Math.PI / 180;
 		this.maxforce = 0.3125;
 		this.maxspeed = 8;
 		this.alFac = 1;
@@ -15,18 +16,18 @@ class Boid {
 	}
 	update(){
 
-		if (this.pos.x > canvas.width + 10) {
-			this.pos.x = -10;
+		if (this.pos.x > canvas.width + 20) {
+			this.pos.x = -20;
 		}
-		if (this.pos.x < -10) {
-			this.pos.x = canvas.width + 10;
+		if (this.pos.x < -20) {
+			this.pos.x = canvas.width + 20;
 		}
 
-		if (this.pos.y > canvas.height + 10) {
-			this.pos.y = -10;
+		if (this.pos.y > canvas.height + 20) {
+			this.pos.y = -20;
 		}
-		if (this.pos.y < -10) {
-			this.pos.y = canvas.height + 10;
+		if (this.pos.y < -20) {
+			this.pos.y = canvas.height + 20;
 		}
 
 		//freewill
@@ -43,7 +44,7 @@ class Boid {
 	pushLocalMates(otherBoids, pres){
 		for (var i = 0; i < otherBoids.length; i++) {
 			let d = this.pos.dist(otherBoids[i].pos);
-			if (otherBoids[i] != this  && this.localMates.length <= pres && (d <= this.senseRadius && Vector2.angleBetween(Vector2.subV1V2(otherBoids[i].pos, this.pos), this.vel) < 3 * Math.PI / 4 || d <= this.senseRadius/2)) {
+			if (otherBoids[i] != this  && this.localMates.length <= pres && (d <= this.senseRadius && Vector2.angleBetween(Vector2.subV1V2(otherBoids[i].pos, this.pos), this.vel) < this.FOV || d <= this.senseRadius/2)) {
 				if (this.hl) {
 					drawLine(this.pos, otherBoids[i].pos);
 				}
@@ -65,9 +66,11 @@ class Boid {
 		}
 		if (total != 0 ) {
 			tmpD.divS(total);
+			if (this.alFac < 0.4) {
+				this.alFac = 0.4
+			}
 			this.seek(tmpD, this.alFac);
 		}
-		
 	}
 
 	cohesion() {
@@ -101,7 +104,7 @@ class Boid {
 		}
 		if (total != 0) {
 			tmpD.divS(total);
-			this.seek(tmpD, this.sepFac * 1.2);
+			this.seek(tmpD, this.sepFac);
 		}
 	}
 
@@ -132,7 +135,7 @@ class Boid {
 			if (this.hl) {
 				
 				drawPoint(this.pos, this.senseRadius/2, '#00000022');
-				drawSense(this.pos, this.senseRadius, this.vel, 3 * Math.PI / 4, '#00000022');
+				drawSense(this.pos, this.senseRadius, this.vel, this.FOV, '#00000022');
 				drawTri(this.pos, this.vel, 15, '#FFAEBC');
 			} else {
 				drawTri(this.pos, this.vel, 15, '#A0E7E5');
@@ -141,7 +144,7 @@ class Boid {
 			if (this.hl) {
 				
 				drawPoint(this.pos, this.senseRadius/2, '#00000022');
-				drawSense(this.pos, this.senseRadius, this.vel, 3 * Math.PI / 4, '#00000022');
+				drawSense(this.pos, this.senseRadius, this.vel, this.FOV, '#00000022');
 				drawPoint(this.pos, 10, '#FFAEBC');
 			} else {
 				drawPoint(this.pos, 10, '#A0E7E5');

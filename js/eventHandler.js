@@ -2,6 +2,7 @@ let sepSlider = document.querySelector('#separation');
 let alSlider = document.querySelector('#alignment');
 let cohSlider = document.querySelector('#cohesion');
 let visSlider = document.querySelector('#vision');
+let fovSlider = document.querySelector('#FOV');
 let freeSlider = document.querySelector('#free');
 let spdSlider = document.querySelector('#speed');
 let presSlider = document.querySelector('#precision');
@@ -19,6 +20,9 @@ sepSlider.addEventListener('input', () => {
 });
 alSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
+		if (alSlider.value <= 30) {
+			alSlider.value = 30
+		}
 		flock[i].alFac = alSlider.value / 50;
 	}
 });
@@ -31,6 +35,13 @@ visSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
 		flock[i].senseRadius = Math.floor(visSlider.value);
 	}
+});
+fovSlider.addEventListener('input', () => {
+	for (var i = 0; i < flock.length; i++) {
+		flock[i].FOV = fovSlider.value * Math.PI / 180;
+
+	}
+	console.log(flock[0].FOV);
 });
 spdSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
