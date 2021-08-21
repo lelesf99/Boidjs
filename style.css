@@ -90,9 +90,25 @@ button:active{
 	background-color: #FFF;
 }
 @media only screen
-  and (max-device-width: 720px)
+  and (max-device-width: 560px)
   and (-webkit-min-device-pixel-ratio: 2) {
   .menu{
-		display: none;
+		position: absolute;
+		z-index: 10;
+		width: auto;
+		height: 50px;
+	}
+	.menu:hover{
+		height: 700px;
+		background-color: #00000066;
+	}
+	.touch{
+		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		z-index: 5;
+	}
+	.touch:hover {
+		z-index: -10;
 	}
 }
