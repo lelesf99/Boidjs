@@ -4,6 +4,7 @@ class Boid {
 		this.vel = new Vector2((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
 		this.acc = new Vector2(0 ,0);
 		this.preVel = new Vector2(0 ,0);
+		this.freewillVector = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
 		this.localMates = [];
 		this.senseRadius = 165;
 		this.FOV = 120 * Math.PI / 180;
@@ -12,42 +13,11 @@ class Boid {
 		this.minspeed = 2;
 		this.alFac = 1;
 		this.cohFac = 1;
-		this.sepFac = 1;	
-		this.freewill = 0;
+		this.sepFac = 1;
+		this.freewillFac = 0;
 		this.hl = hl;
 	}
-	update(){
-
-		if (this.pos.x > canvas.width + 20) {
-			this.pos.x = -20;
-		}
-		if (this.pos.x < -20) {
-			this.pos.x = canvas.width + 20;
-		}
-
-		if (this.pos.y > canvas.height + 20) {
-			this.pos.y = -20;
-		}
-		if (this.pos.y < -20) {
-			this.pos.y = canvas.height + 20;
-		}
-
-
-
-		//freewill
-		var freewillF = new Vector2(getRandomArb(-this.freewill/20, this.freewill/20), (getRandomArb(-this.freewill/20, this.freewill/20)));
-		freewillF.limit(this.maxforce);
-		this.acc.add(freewillF);
-
-		// console.log(this.desire);
-		this.vel.add(this.acc);
-		if (this.vel.mag() <= this.minspeed) {
-			this.vel.setMag(this.minspeed);
-		}
-		this.pos.add(this.vel);
-		this.preVel = this.vel;
-		this.acc.multS(0);
-	}
+	
 
 	pushLocalMates(otherBoids, pres){
 		for (var i = 0; i < otherBoids.length; i++) {
@@ -63,7 +33,6 @@ class Boid {
 	popLocalMates(otherBoids){
 		this.localMates.splice(0,this.localMates.length);
 	}
-
 	align() {
 		var tmpD = new Vector2(0, 0);
 
@@ -80,7 +49,6 @@ class Boid {
 			this.seek(tmpD, this.alFac);
 		}
 	}
-
 	cohesion() {
 		var tmpD = new Vector2(0, 0);
 
@@ -96,7 +64,6 @@ class Boid {
 			this.seek(tmpD, this.cohFac);
 		}
 	}
-
 	separate() {
 		var tmpD = new Vector2(0, 0);
 		var total = 0;
@@ -115,9 +82,6 @@ class Boid {
 			this.seek(tmpD, this.sepFac);
 		}
 	}
-
-	
-
 	interest(v, i) {
 		var tmpD = new Vector2(v.x, v.y);
 		let diff = Vector2.subV1V2(tmpD, this.pos);
@@ -127,16 +91,67 @@ class Boid {
 			}
 		diff.multS(d);
 		diff.sub(this.pos);
-		this.seek(diff, 0.001 * (d))
+		this.seek(diff, 0.0000078125 * (d * i));
 	}
+	seekFreewill(){
+		this.freewillVector.add(new Vector2((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100));
+		let diff = Vector2.subV1V2(this.freewillVector, this.pos);
+		let d = this.pos.dist(this.freewillVector);
+		if (d < i) {
+				d = 0;
+			}
+		diff.multS(d);
+		diff.sub(this.pos);
+		this.seek(diff, this.freewillFac / 20);
 
+		if (this.freewillVector.x > canvas.width + 1000) {
+			this.freewillVector.x = -1000;
+		}
+		if (this.freewillVector.x < -1000) {
+			this.freewillVector.x = canvas.width + 1000;
+		}
+
+		if (this.freewillVector.y > canvas.height + 1000) {
+			this.freewillVector.y = -1000;
+		}
+		if (this.freewillVector.y < -1000) {
+			this.freewillVector.y = canvas.height + 1000;
+		}
+	}
 	seek(target, fac){
 		target.setMag(this.maxspeed);
 		target.sub(this.vel);
 		target.limit(this.maxforce * fac);
 		this.acc.add(target);
 	}
+	update(){
+		if (this.pos.x > canvas.width + 20) {
+			this.pos.x = -20;
+		}
+		if (this.pos.x < -20) {
+			this.pos.x = canvas.width + 20;
+		}
 
+		if (this.pos.y > canvas.height + 20) {
+			this.pos.y = -20;
+		}
+		if (this.pos.y < -20) {
+			this.pos.y = canvas.height + 20;
+		}
+		//freewill
+		if (this.freewillFac != 0) {
+			this.seekFreewill();
+		}
+		
+		// console.log(this.desire);
+		this.vel.add(this.acc);
+		if (this.vel.mag() <= this.minspeed) {
+			this.vel.setMag(this.minspeed);
+		}
+		this.pos.add(this.vel);
+		this.preVel = this.vel;
+		this.acc.multS(0);
+	}
 	draw(shape){
 		this.update();
 		if (shape) {

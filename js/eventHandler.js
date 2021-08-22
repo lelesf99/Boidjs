@@ -52,7 +52,7 @@ presSlider.addEventListener('input', () => {
 });
 freeSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
-		flock[i].freewill = Math.floor(freeSlider.value);
+		flock[i].freewillFac = Math.floor(freeSlider.value);
 	}
 });
 hlToggle.addEventListener('click', () => {
@@ -79,15 +79,16 @@ remBtn.addEventListener('click', () => {
 })
 
 canvas.addEventListener('mousedown', (event) => {
-    interest = 100;
+	intX = event.clientX;
+	intY = event.clientY;
+    interest += 100;
     intFac = 5;
 });
 canvas.addEventListener('mousemove', (event) => {
-    if(interest >= 1) {
+    if(interest) {
 		intX = event.clientX;
 		intY = event.clientY;
 	}
-	
 });
 canvas.addEventListener('mouseup', (event) => {
     intFac = -4;

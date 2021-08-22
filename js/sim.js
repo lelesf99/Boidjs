@@ -2,7 +2,7 @@ flock = [];
 var pres = 105;
 var intX = canvas.width/2;
 var intY = canvas.height/2;
-var interest = 1;
+var interest = 0;
 var intFac = 0;
 var shape = true;
 
@@ -32,15 +32,7 @@ function remBoids(){
 function animate() {
 	c.clearRect(0, 0, canvas.width, canvas.height);
 	requestAnimationFrame(animate);
-	if (interest >= 1) {
-		interest += intFac;
-		if (intFac >= 0.1) {
-			intFac = intFac - 0.1; 
-		}
-	} else {
-		interest = 1;
-		intFac = intFac + 0.1;
-	}
+
 	for (var i = 0; i < flock.length; i++) {
 		flock[i].pushLocalMates(flock, pres);
 		
@@ -52,6 +44,16 @@ function animate() {
 			flock[i].interest(new Vector2(intX, intY),interest);
 		}
 		flock[i].popLocalMates();
+	}
+	if (interest > 0) {
+		interest += intFac;
+		if (intFac > 0.5) {
+			intFac = intFac - 0.5; 
+		} else if(intFac > 0 && intFac <= 0.5) {
+			intFac = 0;
+		}
+	} else {
+		interest = 0;
 	}
 	if(interest >= 1) {
 		drawPoint(new Vector2(intX, intY), interest, '#FFFFFF33');
