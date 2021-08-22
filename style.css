@@ -91,8 +91,7 @@ button:active{
 	background-color: #FFF;
 }
 @media only screen
-  and (max-device-width: 560px)
-  and (-webkit-min-device-pixel-ratio: 2) {
+  and (max-device-width: 560px) {
   .menu{
 		position: absolute;
 		z-index: 10;
