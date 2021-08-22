@@ -38,7 +38,6 @@ fovSlider.addEventListener('input', () => {
 		flock[i].FOV = fovSlider.value * Math.PI / 180;
 
 	}
-	console.log(flock[0].FOV);
 });
 spdSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
