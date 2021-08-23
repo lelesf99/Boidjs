@@ -7,7 +7,7 @@
 canvas{
 	background-image: radial-gradient(#3C4265,#1C1230);
 	position: absolute;
-	z-index: 0;
+	z-index: -10;
 }
 .menu{
 	position: absolute;
@@ -23,6 +23,7 @@ canvas{
 	background-color: #00000000;
 	transition: all 0.2s;
 	transition-timing-function: ease-in-out;
+	z-index: 10;
 }
 .menu:hover{
 	height: 750px;
