@@ -67,56 +67,77 @@ function getRandomArb(min, max) {
   return Math.random() * (max - min) + min;
 }
 
+function constrain(n, low, high) {
+	return Math.max(Math.min(n, high), low);
+};
+
+function map(n, start1, stop1, start2, stop2, withinBounds) {
+	const newval = (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
+	if (!withinBounds) {
+		return newval;
+	}
+	if (start2 < stop2) {
+		return this.constrain(newval, start2, stop2);
+	} else {
+		return this.constrain(newval, stop2, start2);
+	}
+};
+
 var canvas = document.querySelector('canvas');
 var c = canvas.getContext("2d");
 
-canvas.setAttribute('width', window.innerWidth);
-canvas.setAttribute('height', window.innerHeight);
+var offCanvas = new OffscreenCanvas(window.innerWidth, window.innerHeight);
+var offCtx = offCanvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 c.lineWidth = 4;
 
 window.addEventListener("resize", () => {
-	canvas.setAttribute('width', window.innerWidth);
-	canvas.setAttribute('height', window.innerHeight);
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	offCanvas.width = window.innerWidth;
+	offCanvas.height = window.innerHeight;
 });
 
 function drawPoint(pos, r, color) {
-	c.beginPath();
-	c.arc(pos.x, pos.y, r, r, 0, Math.PI*2);
-	c.fillStyle = color;
-	c.fill();
-	c.strokeStyle = '#00000033';
-	c.stroke();
+	offCtx.beginPath();
+	offCtx.arc(pos.x, pos.y, r, r, 0, Math.PI*2);
+	offCtx.fillStyle = color;
+	offCtx.fill();
+	offCtx.strokeStyle = '#00000033';
+	offCtx.stroke();
 }
 function drawSense(pos, r, head, arc, color) {
-	c.beginPath();
-	c.ellipse(pos.x, pos.y, r, r, head.angle(), -arc, arc);
-	c.lineTo(pos.x, pos.y);
-	c.closePath();
-	c.fillStyle = color;
-	c.fill();
-	c.strokeStyle = '#00000033';
-	c.stroke();
+	offCtx.beginPath();
+	offCtx.ellipse(pos.x, pos.y, r, r, head.angle(), -arc, arc);
+	offCtx.lineTo(pos.x, pos.y);
+	offCtx.closePath();
+	offCtx.fillStyle = color;
+	offCtx.fill();
+	offCtx.strokeStyle = '#00000033';
+	offCtx.stroke();
 }
 function drawTri(pos, head, size, color) {
-	c.save();
-	c.beginPath();
-	c.translate(pos.x, pos.y);
-	c.rotate(head.angle());
-	c.moveTo(size, 0);
-	c.lineTo(- size, - size / 2);
-	c.lineTo(- size, + size / 2);
-	c.lineTo(size, 0);
-	c.fillStyle = color;
-	c.fill();
-	c.strokeStyle = '#00000033';
-	c.stroke();
-	c.restore();
+	offCtx.save();
+	offCtx.beginPath();
+	offCtx.translate(pos.x, pos.y);
+	offCtx.rotate(head.angle());
+	offCtx.moveTo(size, 0);
+	offCtx.lineTo(- size, - size / 2);
+	offCtx.lineTo(- size, + size / 2);
+	offCtx.lineTo(size, 0);
+	offCtx.fillStyle = color;
+	offCtx.fill();
+	offCtx.strokeStyle = '#00000033';
+	offCtx.stroke();
+	offCtx.restore();
 }
 function drawLine(a, b) {
-	c.beginPath();
-	c.moveTo(a.x, a.y);
-	c.lineTo(b.x, b.y);
-	c.strokeStyle = '#FFFFFF22';
-	c.stroke();
+	offCtx.beginPath();
+	offCtx.moveTo(a.x, a.y);
+	offCtx.lineTo(b.x, b.y);
+	offCtx.strokeStyle = '#FFFFFF22';
+	offCtx.stroke();
 }

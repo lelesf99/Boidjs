@@ -14,11 +14,9 @@ class Boid {
 		this.alFac = 1;
 		this.cohFac = 1;
 		this.sepFac = 1;
-		this.freewillFac = 0;
+		this.freewillFac = 5;
 		this.hl = hl;
 	}
-	
-
 	pushLocalMates(otherBoids, pres){
 		for (var i = 0; i < otherBoids.length; i++) {
 			let d = this.pos.dist(otherBoids[i].pos);
@@ -30,7 +28,7 @@ class Boid {
 			}
 		}
 	}
-	popLocalMates(otherBoids){
+	popLocalMates(){
 		this.localMates.splice(0,this.localMates.length);
 	}
 	align() {
@@ -60,8 +58,12 @@ class Boid {
 
 		if (total != 0) {
 			tmpD.divS(total);
+			let d = this.pos.dist(tmpD);
+
+			var arrival = map(d, 0, this.senseRadius* 0.6, 0, 1);
+
 			tmpD.sub(this.pos);
-			this.seek(tmpD, this.cohFac);
+			this.seek(tmpD, this.cohFac*arrival);
 		}
 	}
 	separate() {

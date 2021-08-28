@@ -31,6 +31,7 @@ function remBoids(){
 
 function animate() {
 	c.clearRect(0, 0, canvas.width, canvas.height);
+	offCtx.clearRect(0, 0, canvas.width, canvas.height);
 	requestAnimationFrame(animate);
 
 	for (var i = 0; i < flock.length; i++) {
@@ -61,5 +62,6 @@ function animate() {
 	for (var i = 0; i < flock.length; i++) {
 		flock[i].draw(shape);
 	}
+	c.drawImage(offCanvas, 0,0);
 }
 animate();
