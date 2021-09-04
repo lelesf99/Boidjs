@@ -4,9 +4,9 @@ var intX = canvas.width/2;
 var intY = canvas.height/2;
 var interest = 0;
 var intFac = 0;
-var shape = true;
+var shape = false;
 
-for (var i = 0; i < 128; i++) {
+for (var i = 0; i < 1024; i++) {
 	if (i == 0) {
 		flock.push(new Boid(new Vector2(Math.random() * canvas.width, Math.random() * canvas.height), true));
 	} else {
@@ -30,7 +30,13 @@ function remBoids(){
 }
 
 function animate() {
-	c.clearRect(0, 0, canvas.width, canvas.height);
+	if (shape) {
+		c.clearRect(0, 0, canvas.width, canvas.height);
+	} else {
+		c.fillStyle = '#00000010'
+		c.fillRect(0, 0, canvas.width, canvas.height);
+	}
+	
 	offCtx.clearRect(0, 0, canvas.width, canvas.height);
 	requestAnimationFrame(animate);
 
@@ -56,7 +62,7 @@ function animate() {
 	} else {
 		interest = 0;
 	}
-	if(interest >= 1) {
+	if(interest >= 1 && shape) {
 		drawPoint(new Vector2(intX, intY), interest, '#FFFFFF33');
 	}
 	for (var i = 0; i < flock.length; i++) {

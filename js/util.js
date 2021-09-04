@@ -92,7 +92,7 @@ var offCtx = offCanvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-c.lineWidth = 4;
+c.lineWidth = 10;
 
 window.addEventListener("resize", () => {
 	canvas.width = window.innerWidth;
@@ -103,7 +103,7 @@ window.addEventListener("resize", () => {
 
 function drawPoint(pos, r, color) {
 	offCtx.beginPath();
-	offCtx.arc(pos.x, pos.y, r, r, 0, Math.PI*2);
+	offCtx.arc(pos.x, pos.y, r, 0, Math.PI*2);
 	offCtx.fillStyle = color;
 	offCtx.fill();
 	offCtx.strokeStyle = '#00000033';
@@ -134,10 +134,12 @@ function drawTri(pos, head, size, color) {
 	offCtx.stroke();
 	offCtx.restore();
 }
-function drawLine(a, b) {
+function drawLine(a, b, color) {
+	offCtx.lineWidth = 0.5;
+	offCtx.lineCap = 'round';
 	offCtx.beginPath();
 	offCtx.moveTo(a.x, a.y);
 	offCtx.lineTo(b.x, b.y);
-	offCtx.strokeStyle = '#FFFFFF22';
+	offCtx.strokeStyle = color;
 	offCtx.stroke();
 }

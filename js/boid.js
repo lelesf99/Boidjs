@@ -1,6 +1,7 @@
 class Boid {
 	constructor(pos, hl) {
 		this.pos = pos;
+		this.prePos = this.pos;
 		this.vel = new Vector2((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
 		this.acc = new Vector2(0 ,0);
 		this.preVel = new Vector2(0 ,0);
@@ -21,7 +22,7 @@ class Boid {
 		for (var i = 0; i < otherBoids.length; i++) {
 			let d = this.pos.dist(otherBoids[i].pos);
 			if (otherBoids[i] != this  && this.localMates.length <= pres && (d <= this.senseRadius && Vector2.angleBetween(Vector2.subV1V2(otherBoids[i].pos, this.pos), this.vel) < this.FOV || d <= this.senseRadius/2)) {
-				if (this.hl) {
+				if (this.hl && shape) {
 					drawLine(this.pos, otherBoids[i].pos);
 				}
 				this.localMates.push(otherBoids[i]);
@@ -140,6 +141,7 @@ class Boid {
 		if (this.pos.y < -20) {
 			this.pos.y = canvas.height + 20;
 		}
+		this.prePos = new Vector2(this.pos.x, this.pos.y);
 		//freewill
 		if (this.freewillFac != 0) {
 			this.seekFreewill();
@@ -166,15 +168,7 @@ class Boid {
 				drawTri(this.pos, this.vel, 15, '#A0E7E5');
 			}
 		} else {
-			if (this.hl) {
-				
-				drawPoint(this.pos, this.senseRadius/2, '#00000022');
-				drawSense(this.pos, this.senseRadius, this.vel, this.FOV, '#00000022');
-				drawPoint(this.pos, 10, '#FFAEBC');
-			} else {
-				drawPoint(this.pos, 10, '#A0E7E5');
-			}
+			drawLine(this.prePos, this.pos, '#FFFFFF');
 		}
-		
 	}
 }
