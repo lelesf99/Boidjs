@@ -11,7 +11,7 @@ class Boid {
 		this.FOV = 120 * Math.PI / 180;
 		this.maxforce = 0.3125;
 		this.maxspeed = 8;
-		this.minspeed = 2;
+		this.minspeed = this.maxspeed/2;
 		this.alFac = 1;
 		this.cohFac = 1;
 		this.sepFac = 1;
@@ -124,8 +124,6 @@ class Boid {
 		}
 		this.prePos = new Vector2(this.pos.x, this.pos.y);
 		
-		// littlebit of randomness
-		this.vel.add(Vector2.randomV(0.5,0.25));
 		// slightly seek center
 		this.seek(Vector2.subvu(new Vector2(width/2, height/2), this.pos), 0.25);
 
