@@ -1,12 +1,13 @@
 class Boid {
-	constructor(pos, hl) {
-		this.pos = pos;
+	constructor(x, y, hl) {
+		this.pos = new Vector2(x, y);
 		this.prePos = this.pos;
 		this.vel = Vector2.randomV(20, 10);
 		this.acc = new Vector2(0 ,0);
 		this.preVel = new Vector2(0 ,0);
 		this.localMates = [];
 		this.senseRadius = 80;
+		this.sense = new Circle(this.pos.x, this.pos.y, this.senseRadius);
 		this.FOV = 120 * Math.PI / 180;
 		this.maxforce = 0.3125;
 		this.maxspeed = 8;
@@ -14,14 +15,25 @@ class Boid {
 		this.alFac = 1;
 		this.cohFac = 1;
 		this.sepFac = 1;
+		this.hl = hl;
 	}
-	pushLocalMates(otherBoids, pres){
-		for (var i = 0; i < otherBoids.length; i++) {
-			let d = this.pos.dist(otherBoids[i].pos);
-			if (otherBoids[i] != this  && this.localMates.length <= pres && (d <= this.senseRadius && Vector2.angleBetween(Vector2.subvu(otherBoids[i].pos, this.pos), this.vel) < this.FOV || d <= this.senseRadius/2)) {
-				this.localMates.push(otherBoids[i]);
+	pushLocalMates(qtree, range){
+		this.localMates = qtree.query(range);
+		this.localMates.filter((otherBoid) => {
+			let d = this.pos.dist(otherBoid.pos);
+			if (otherBoid != this && 
+				this.localMates.length <= pres && 
+				(Vector2.angleBetween(Vector2.subvu(otherBoid.pos, this.pos), this.vel) < this.FOV || 
+				d <= this.senseRadius/2)
+				) {
+				if ((quadHl && link) || (shape && this.hl)) {
+					drawLine(otherBoid.pos, this.pos, 1,'#FFFFFF55');
+				}
+				return true;
+			} else {
+				return false;
 			}
-		}
+		});
 	}
 	popLocalMates(){
 		this.localMates.splice(0,this.localMates.length);
@@ -53,12 +65,9 @@ class Boid {
 
 		if (total != 0) {
 			tmpD.div(total);
-			let d = this.pos.dist(tmpD);
-
-			var arrival = map(d, 0, this.senseRadius* 0.6, 0, 1);
 
 			tmpD.sub(this.pos);
-			this.seek(tmpD, this.cohFac*arrival);
+			this.seek(tmpD, this.cohFac);
 		}
 	}
 	separate() {
@@ -123,6 +132,17 @@ class Boid {
 	}
 	draw(shape){
 		this.update();
-		drawLine(this.prePos, this.pos, 1, '#FFFFFF');
+		if (shape) {
+			if (this.hl) {
+				
+				drawCircle(this.pos, this.senseRadius/2, '#00000022');
+				drawSense(this.pos, this.senseRadius, this.vel, this.FOV, '#00000022');
+				drawTri(this.pos, this.vel, 15, '#FFAEBC');
+			} else {
+				drawTri(this.pos, this.vel, 15, '#A0E7E5');
+			}
+		} else {
+			drawLine(this.prePos, this.pos, 1, '#FFFFFF');
+		}
 	}
 }

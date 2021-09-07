@@ -1,3 +1,70 @@
+class Circle {
+    constructor(x, y, r) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.rr = r*r;
+    }
+	containsPoint(point) {
+        if (Vector2.distvu(point.pos, new Vector2(this.x, this.y)) <= this.r)
+            return true;
+        return false;
+    }
+    intersectsBox(rect) {
+		let circleDistance = new Vector2();
+
+        circleDistance.x = this.x - rect.x;
+        circleDistance.y = this.y - rect.y;
+
+        if (circleDistance.x > (rect.w + this.r) || circleDistance.x + this.r < 0) { return false; }
+        if (circleDistance.y > (rect.h + this.r) || circleDistance.y + this.r < 0) { return false; }
+
+        if (circleDistance.x <= (rect.w)) { return true; } 
+        if (circleDistance.y <= (rect.h)) { return true; }
+
+        let cornerDistance_sq = (circleDistance.x - rect.w/2) * (circleDistance.x - rect.w/2) +
+                            (circleDistance.y - rect.h/2) * (circleDistance.y - rect.h/2);
+
+        return (cornerDistance_sq >= (this.rr));
+    }
+	show(color) {
+		drawCircle(new Vector2(this.x, this.y), this.r, color);
+	}
+}
+
+class Rect {
+    constructor(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    }
+
+    containsPoint(point) {
+        if (point.pos.x > this.x && point.pos.x <= this.x + this.w &&
+            point.pos.y > this.y && point.pos.y <= this.y + this.h)
+            return true;
+        return false;
+    }
+    intersectsBox(other) {
+        if (other.x >= this.x + this.w ||
+            other.x + other.w < this.x ||
+            other.y >= this.y + this.h ||
+            other.y + other.h < this.y)
+            return false;
+        return true;
+    }
+	intersectsCircle(circle) {
+		return circle.intersectsBox(this);
+	}
+	show(color) {
+		offCtx.strokeStyle = color;
+        offCtx.lineWidth = 1;
+        offCtx.rect(this.x, this.y, this.w, this.h);
+        offCtx.stroke();
+	}
+}
+
 class Vector2 {
 	constructor(x, y) {
 		this.x = x;
@@ -31,6 +98,9 @@ class Vector2 {
 	}
 	dist(v){
 		return Math.sqrt((this.x - v.x) * (this.x - v.x) + (this.y - v.y) * (this.y - v.y));
+	}
+	static distvu(v, u){
+		return Math.sqrt((v.x - u.x) * (v.x - u.x) + (v.y - u.y) * (v.y - u.y));
 	}
 	magSq() {
 		const x = this.x;

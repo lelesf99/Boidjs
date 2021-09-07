@@ -13,6 +13,9 @@ let remBtn = document.querySelector("#despawn");
 hlToggle = document.querySelector("#hlToggle");
 shapeBtn = document.querySelector("#shapeBtn");
 
+
+
+
 sepSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
 		flock[i].sepFac = sepSlider.value / 50;
@@ -86,10 +89,8 @@ canvas.addEventListener('mousedown', (event) => {
 
 });
 canvas.addEventListener('mousemove', (event) => {
-    if(interest) {
-		intX = event.clientX;
-		intY = event.clientY;
-	}
+	intX = event.clientX;
+	intY = event.clientY;
 });
 canvas.addEventListener('mouseup', (event) => {
     intFac = -4;

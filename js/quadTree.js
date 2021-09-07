@@ -1,27 +1,3 @@
-class box {
-    constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-    }
-
-    containsPoint(point) {
-        if (point.pos.x > this.x && point.pos.x <= this.x + this.w &&
-            point.pos.y > this.y && point.pos.y <= this.y + this.h)
-            return true;
-        return false;
-    }
-    intersects(other) {
-        if (other.x >= this.x + this.w ||
-            other.x + other.w < this.x ||
-            other.y >= this.y + this.h ||
-            other.y + other.h < this.y)
-            return false;
-        return true;
-    }
-}
-
 class quadTree {
     constructor(cap, bound) {
         this.cap = cap;
@@ -36,23 +12,23 @@ class quadTree {
     }
 
     subdivide() {
-        let quad1Box = new box(
+        let quad1Box = new Rect(
             this.bound.x + this.bound.w / 2, 
             this.bound.y, 
             this.bound.w / 2, 
             this.bound.h / 2
             );
-        let quad2Box = new box(this.bound.x, 
+        let quad2Box = new Rect(this.bound.x, 
             this.bound.y, 
             this.bound.w / 2, 
             this.bound.h / 2
             );
-        let quad3Box = new box(this.bound.x, 
+        let quad3Box = new Rect(this.bound.x, 
             this.bound.y + this.bound.h / 2, 
             this.bound.w / 2, 
             this.bound.h / 2
             );
-        let quad4Box = new box(this.bound.x + this.bound.w / 2, 
+        let quad4Box = new Rect(this.bound.x + this.bound.w / 2, 
             this.bound.y + this.bound.h / 2, 
             this.bound.w / 2, 
             this.bound.h / 2
@@ -76,11 +52,9 @@ class quadTree {
             this.subdivide();
         }
 
-
         for (let i = 0; i < this.points.length; i++) {
             this.insert(this.points.pop());
         }
-
         
         if (this.quad1.insert(point)) return true;
         if (this.quad2.insert(point)) return true;
@@ -90,13 +64,17 @@ class quadTree {
         return false;
     }
 
-    query(range, result) {
+    query(range, result, show) {
         if (!result) {
             result = [];
         }
 
-        if (!this.bound.intersects(range)){
+        if (!range.intersectsBox(this.bound)){
             return result;
+        } else {
+            if (show) {
+                this.bound.show('#550000');
+            }
         }
 
         this.points.forEach(p => {
@@ -108,19 +86,16 @@ class quadTree {
             return result;
         }   
 
-        this.quad1.query(range, result);
-        this.quad2.query(range, result);
-        this.quad3.query(range, result);
-        this.quad4.query(range, result);
+        this.quad1.query(range, result, show);
+        this.quad2.query(range, result, show);
+        this.quad3.query(range, result, show);
+        this.quad4.query(range, result, show);
 
         return result;
     }
 
     show() {
-        offCtx.strokeStyle = '#11441155';
-        offCtx.lineWidth = 1;
-        offCtx.rect(this.bound.x, this.bound.y, this.bound.w, this.bound.h);
-        offCtx.stroke();
+        this.bound.show('#11551155');
         if (this.quad1) this.quad1.show();
         if (this.quad2) this.quad2.show();
         if (this.quad3) this.quad3.show();
