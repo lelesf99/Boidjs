@@ -18,7 +18,12 @@ class Boid {
 		this.hl = hl;
 	}
 	pushLocalMates(qtree, range){
-		this.localMates = qtree.query(range);
+		if (this.hl) {
+			this.localMates = qtree.query(range, undefined, true);
+		} else {
+			this.localMates = qtree.query(range);
+		}
+		
 		this.localMates.filter((otherBoid) => {
 			let d = this.pos.dist(otherBoid.pos);
 			if (otherBoid != this && 
@@ -127,6 +132,9 @@ class Boid {
 		// slightly seek center
 		this.seek(Vector2.subvu(new Vector2(width/2, height/2), this.pos), 0.25);
 
+		// a bit of randomness
+		this.acc.add(Vector2.randomV(.5, 0.25));
+
 		this.vel.add(this.acc);
 		if (this.vel.mag() <= this.minspeed) {
 			this.vel.setMag(this.minspeed);
@@ -139,7 +147,6 @@ class Boid {
 		this.update();
 		if (shape) {
 			if (this.hl) {
-				
 				drawCircle(this.pos, this.senseRadius/2, '#00000022');
 				drawSense(this.pos, this.senseRadius, this.vel, this.FOV, '#00000022');
 				drawTri(this.pos, this.vel, 15, '#FFAEBC');
@@ -147,7 +154,12 @@ class Boid {
 				drawTri(this.pos, this.vel, 15, '#A0E7E5');
 			}
 		} else {
-			drawLine(this.prePos, this.pos, 1, '#FFFFFF');
+			if (this.hl) {
+				drawLine(this.prePos, this.pos, 2, '#FF0000');
+			} else {
+				drawLine(this.prePos, this.pos, 1, '#FFFFFF');
+			}
+			
 		}
 	}
 }

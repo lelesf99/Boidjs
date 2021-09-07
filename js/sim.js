@@ -9,7 +9,7 @@ let frameCount = 0;
 let quadHl = false;
 let link = false;
 let trail = 55;
-let quadCap = 32;
+let quadCap = 16;
 
 for (var i = 0; i < 1024; i++) {
 	if (i == 0) {
@@ -52,9 +52,7 @@ function animate() {
 	offCtx.clearRect(0, 0, canvas.width, canvas.height);
 	requestAnimationFrame(animate);
 	
-	if (quadHl) {
-		qtree.show();
-	}
+	
 
 	for (var i = 0; i < flock.length; i++) {
 		let range = new Circle(flock[i].pos.x, flock[i].pos.y, flock[i].senseRadius)
@@ -67,6 +65,11 @@ function animate() {
 		}
 		flock[i].popLocalMates();
 	}
+
+	if (quadHl) {
+		qtree.show('#115511');
+	}
+
 	if (interest > 0) {
 		interest += intFac;
 		if (intFac > 0.5) {

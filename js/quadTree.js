@@ -71,10 +71,6 @@ class quadTree {
 
         if (!range.intersectsBox(this.bound)){
             return result;
-        } else {
-            if (show) {
-                this.bound.show('#550000');
-            }
         }
 
         this.points.forEach(p => {
@@ -83,6 +79,9 @@ class quadTree {
         });
 
         if (this.quad1 == null) {
+            if (show) {
+                this.bound.show('#550000');
+            }
             return result;
         }   
 
@@ -94,8 +93,8 @@ class quadTree {
         return result;
     }
 
-    show() {
-        this.bound.show('#11551155');
+    show(color) {
+        this.bound.show(color);
         if (this.quad1) this.quad1.show();
         if (this.quad2) this.quad2.show();
         if (this.quad3) this.quad3.show();

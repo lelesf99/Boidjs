@@ -10,7 +10,8 @@ let presSlider = document.querySelector('#precision');
 let addBtn = document.querySelector("#spawn");
 let remBtn = document.querySelector("#despawn");
 
-hlToggle = document.querySelector("#hlToggle");
+quadHlToggle = document.querySelector("#quadHlToggle");
+singleHlToggle = document.querySelector("#singleHlToggle");
 shapeBtn = document.querySelector("#shapeBtn");
 
 
@@ -58,7 +59,14 @@ quadSlider.addEventListener('input', () => {
 	// }
 	quadCap = quadSlider.value
 });
-hlToggle.addEventListener('click', () => {
+singleHlToggle.addEventListener('click', () => {
+	if (flock[0].hl) {
+		flock[0].hl = false;
+	} else {
+		flock[0].hl = true;
+	}
+});
+quadHlToggle.addEventListener('click', () => {
 	if (quadHl) {
 		quadHl = false;
 	} else {
