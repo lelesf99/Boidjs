@@ -1,10 +1,13 @@
 flock = [];
-var pres = 105;
-var intX = canvas.width/2;
-var intY = canvas.height/2;
-var interest = 0;
-var intFac = 0;
-var shape = false;
+let pres = 105;
+let intX = canvas.width/2;
+let intY = canvas.height/2;
+let interest = 0;
+let intFac = 0;
+let shape = false;
+let frameCount = 0;
+let quadHl = false;
+let quadCap = 32;
 
 for (var i = 0; i < 1024; i++) {
 	if (i == 0) {
@@ -30,20 +33,27 @@ function remBoids(){
 }
 
 function animate() {
+	let qtree = new quadTree(quadCap, new box(0, 0, width, height));
+	for (var i = 0; i < flock.length; i++) {
+		qtree.insert(flock[i]);
+	}
+	
 	if (shape) {
 		c.clearRect(0, 0, canvas.width, canvas.height);
 	} else {
-		c.fillStyle = '#00000010'
+		c.fillStyle = '#00000088'
 		c.fillRect(0, 0, canvas.width, canvas.height);
 	}
 	
 	offCtx.clearRect(0, 0, canvas.width, canvas.height);
 	requestAnimationFrame(animate);
+	
+	
 
 	for (var i = 0; i < flock.length; i++) {
-		flock[i].pushLocalMates(flock, pres);
-		
-		
+		let range = new box(flock[i].pos.x - flock[i].senseRadius, flock[i].pos.y - flock[i].senseRadius, flock[i].senseRadius*2, flock[i].senseRadius*2)
+		flock[i].pushLocalMates(qtree.query(range), pres);
+		//flock[i].pushLocalMates(flock, pres);
 		flock[i].align();
 		flock[i].cohesion();
 		flock[i].separate();
@@ -62,12 +72,16 @@ function animate() {
 	} else {
 		interest = 0;
 	}
-	if(interest >= 1 && shape) {
-		drawPoint(new Vector2(intX, intY), interest, '#FFFFFF33');
+	if(interest >= 1) {
+		drawCircle(new Vector2(intX, intY), interest, '#FFFFFF33');
 	}
 	for (var i = 0; i < flock.length; i++) {
-		flock[i].draw(shape);
+		flock[i].draw();
+	}
+	if (quadHl) {
+		qtree.show();
 	}
 	c.drawImage(offCanvas, 0,0);
+	frameCount++;
 }
 animate();

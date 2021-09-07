@@ -3,7 +3,7 @@ let alSlider = document.querySelector('#alignment');
 let cohSlider = document.querySelector('#cohesion');
 let visSlider = document.querySelector('#vision');
 let fovSlider = document.querySelector('#FOV');
-let freeSlider = document.querySelector('#free');
+let quadSlider = document.querySelector('#quad');
 let spdSlider = document.querySelector('#speed');
 let presSlider = document.querySelector('#precision');
 
@@ -49,16 +49,17 @@ presSlider.addEventListener('input', () => {
 		pres = Math.floor(presSlider.value);
 	}
 });
-freeSlider.addEventListener('input', () => {
-	for (var i = 0; i < flock.length; i++) {
-		flock[i].freewillFac = Math.floor(freeSlider.value);
-	}
+quadSlider.addEventListener('input', () => {
+	// for (var i = 0; i < flock.length; i++) {
+	// 	flock[i].freewillFac = Math.floor(quadSlider.value);
+	// }
+	quadCap = quadSlider.value
 });
 hlToggle.addEventListener('click', () => {
-	if (flock[0].hl) {
-		flock[0].hl = false;
+	if (quadHl) {
+		quadHl = false;
 	} else {
-		flock[0].hl = true;
+		quadHl = true;
 	}
 });
 
@@ -82,6 +83,7 @@ canvas.addEventListener('mousedown', (event) => {
 	intY = event.clientY;
     interest += 100;
     intFac = 5;
+
 });
 canvas.addEventListener('mousemove', (event) => {
     if(interest) {

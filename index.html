@@ -25,14 +25,14 @@
 		<label>Cohesion</label>
 		<input id="cohesion" class="slider" type="range" min="20" max="80" value="50">
 
-		<label>Free Will</label>
-		<input id="free" class="slider" type="range" min="5" max="20" value="0">
+		<label>Quad tree Cap</label>
+		<input id="quad" class="slider" type="range" min="16" max="512" value="32">
 
 		<label>Speed</label>
 		<input id="speed" class="slider" type="range" min="10" max="200" value="105">
 
 		<label>Vision</label>
-		<input id="vision" class="slider" type="range" min="30" max="300" value="165">
+		<input id="vision" class="slider" type="range" min="30" max="160" value="80">
 
 		<label>Vision FOV</label>
 		<input id="FOV" class="slider" type="range" min="80" max="160" value="120">
@@ -45,12 +45,13 @@
 			<button id="despawn" class="button" type="button" style="border-radius: 0 3px 3px 0;">Despawn</button>
 		</div>
 		<div class="buttons">
-			<button id="hlToggle" class="button" type="button" style="border-radius: 3px 0 0 3px;">Highlight</button>
+			<button id="hlToggle" class="button" type="button" style="border-radius: 3px 0 0 3px;">Show quadTree</button>
 			<button id="shapeBtn" class="button" type="button" style="border-radius: 0 3px 3px 0;">Shape</button>
 		</div>
 		
 	</div>
 	<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="js/quadTree.js"></script>
 	<script type="text/javascript" src="js/boid.js"></script>
 	<script type="text/javascript" src="js/sim.js"></script>
 	<script type="text/javascript" src="js/eventHandler.js"></script>

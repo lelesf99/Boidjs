@@ -8,20 +8,23 @@ class Vector2 {
 		this.y = this.y + v.y;
 		return this
 	}
+    static addvu(v, u) {
+		return new Vector2((v.x + u.x), (v.y + u.y));
+	}
 	sub(v) {
 		this.x = (this.x - v.x);
 		this.y = (this.y - v.y);
 		return this
 	}
-	static subV1V2(v1, v2) {
-		return new Vector2((v1.x - v2.x), (v1.y - v2.y));
+	static subvu(v, u) {
+		return new Vector2((v.x - u.x), (v.y - u.y));
 	}
-	multS(k) {
+	mult(k) {
 		this.x = this.x * k;
 		this.y = this.y * k;
 		return this
 	}
-	divS(k) {
+	div(k) {
 		this.x = this.x / k;
 		this.y = this.y / k;
 		return this;
@@ -39,16 +42,16 @@ class Vector2 {
 	}
 	normalize(){
 		const len = this.mag();
-		if (len !== 0) this.multS(1 / len);
+		if (len !== 0) this.mult(1 / len);
 		return this;
 	}
 	setMag(k) {
-		return this.normalize().multS(k);
+		return this.normalize().mult(k);
 	}
 	limit(max) {
 		const mSq = this.magSq();
 		if (mSq > max * max) {
-			this.divS(Math.sqrt(mSq)).multS(max);
+			this.div(Math.sqrt(mSq)).mult(max);
 		}
 		return this;
 	};
@@ -60,6 +63,16 @@ class Vector2 {
 	}
 	angle(){
 		return (this.y < 0) ? -Vector2.angleBetween(this, new Vector2(1,0)) : Vector2.angleBetween(this, new Vector2(1,0));
+	}
+	static fromVAngle(v, angle) {
+		let u = new Vector2(0,0);
+		u.x = v.x * Math.cos(angle) - v.y * Math.sin(angle);
+		u.y =  v.x * Math.sin(angle) + v.y * Math.cos(angle);
+		u.setMag(1);
+		return u;
+	}
+	static randomV(amp, off) {	
+		return new Vector2((Math.random() * amp - off), (Math.random() * amp - off));
 	}
 }
 
@@ -89,19 +102,35 @@ var c = canvas.getContext("2d");
 var offCanvas = new OffscreenCanvas(window.innerWidth, window.innerHeight);
 var offCtx = offCanvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+var width = window.innerWidth;
+var height = window.innerHeight;
+
+canvas.width = width;
+canvas.height = height;
 
 c.lineWidth = 10;
 
 window.addEventListener("resize", () => {
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	offCanvas.width = window.innerWidth;
-	offCanvas.height = window.innerHeight;
+
+	width = window.innerWidth;
+	height = window.innerHeight;
+
+	canvas.width = width;
+	canvas.height = height;
+	offCanvas.width = width;
+	offCanvas.height = height;
 });
 
 function drawPoint(pos, r, color) {
+	offCtx.lineWidth = r;
+	offCtx.lineCap = 'round';
+	offCtx.strokeStyle = color;
+	offCtx.beginPath();
+	offCtx.moveTo(pos.x, pos.y);
+	offCtx.lineTo(pos.x, pos.y);
+	offCtx.stroke();
+}
+function drawCircle(pos, r, color) {
 	offCtx.beginPath();
 	offCtx.arc(pos.x, pos.y, r, 0, Math.PI*2);
 	offCtx.fillStyle = color;
@@ -110,16 +139,18 @@ function drawPoint(pos, r, color) {
 	offCtx.stroke();
 }
 function drawSense(pos, r, head, arc, color) {
+	offCtx.fillStyle = color;
+	offCtx.strokeStyle = '#00000033';
 	offCtx.beginPath();
 	offCtx.ellipse(pos.x, pos.y, r, r, head.angle(), -arc, arc);
 	offCtx.lineTo(pos.x, pos.y);
 	offCtx.closePath();
-	offCtx.fillStyle = color;
 	offCtx.fill();
-	offCtx.strokeStyle = '#00000033';
 	offCtx.stroke();
 }
 function drawTri(pos, head, size, color) {
+	offCtx.fillStyle = color;
+	offCtx.strokeStyle = '#00000033';
 	offCtx.save();
 	offCtx.beginPath();
 	offCtx.translate(pos.x, pos.y);
@@ -128,18 +159,16 @@ function drawTri(pos, head, size, color) {
 	offCtx.lineTo(- size, - size / 2);
 	offCtx.lineTo(- size, + size / 2);
 	offCtx.lineTo(size, 0);
-	offCtx.fillStyle = color;
 	offCtx.fill();
-	offCtx.strokeStyle = '#00000033';
 	offCtx.stroke();
 	offCtx.restore();
 }
-function drawLine(a, b, color) {
-	offCtx.lineWidth = 0.5;
+function drawLine(a, b, s, color) {
+	offCtx.lineWidth = s;
 	offCtx.lineCap = 'round';
+	offCtx.strokeStyle = color;
 	offCtx.beginPath();
 	offCtx.moveTo(a.x, a.y);
 	offCtx.lineTo(b.x, b.y);
-	offCtx.strokeStyle = color;
 	offCtx.stroke();
 }

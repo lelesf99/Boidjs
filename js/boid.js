@@ -2,12 +2,11 @@ class Boid {
 	constructor(pos, hl) {
 		this.pos = pos;
 		this.prePos = this.pos;
-		this.vel = new Vector2((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
+		this.vel = Vector2.randomV(20, 10);
 		this.acc = new Vector2(0 ,0);
 		this.preVel = new Vector2(0 ,0);
-		this.freewillVector = new Vector2(Math.random() * canvas.width, Math.random() * canvas.height);
 		this.localMates = [];
-		this.senseRadius = 165;
+		this.senseRadius = 80;
 		this.FOV = 120 * Math.PI / 180;
 		this.maxforce = 0.3125;
 		this.maxspeed = 8;
@@ -15,16 +14,11 @@ class Boid {
 		this.alFac = 1;
 		this.cohFac = 1;
 		this.sepFac = 1;
-		this.freewillFac = 5;
-		this.hl = hl;
 	}
 	pushLocalMates(otherBoids, pres){
 		for (var i = 0; i < otherBoids.length; i++) {
 			let d = this.pos.dist(otherBoids[i].pos);
-			if (otherBoids[i] != this  && this.localMates.length <= pres && (d <= this.senseRadius && Vector2.angleBetween(Vector2.subV1V2(otherBoids[i].pos, this.pos), this.vel) < this.FOV || d <= this.senseRadius/2)) {
-				if (this.hl && shape) {
-					drawLine(this.pos, otherBoids[i].pos);
-				}
+			if (otherBoids[i] != this  && this.localMates.length <= pres && (d <= this.senseRadius && Vector2.angleBetween(Vector2.subvu(otherBoids[i].pos, this.pos), this.vel) < this.FOV || d <= this.senseRadius/2)) {
 				this.localMates.push(otherBoids[i]);
 			}
 		}
@@ -41,7 +35,7 @@ class Boid {
 			total++;
 		}
 		if (total != 0 ) {
-			tmpD.divS(total);
+			tmpD.div(total);
 			if (this.alFac < 0.4) {
 				this.alFac = 0.4
 			}
@@ -58,7 +52,7 @@ class Boid {
 		}
 
 		if (total != 0) {
-			tmpD.divS(total);
+			tmpD.div(total);
 			let d = this.pos.dist(tmpD);
 
 			var arrival = map(d, 0, this.senseRadius* 0.6, 0, 1);
@@ -71,55 +65,30 @@ class Boid {
 		var tmpD = new Vector2(0, 0);
 		var total = 0;
 		for (var i = this.localMates.length - 1; i >= 0; i--) {
-			let diff = Vector2.subV1V2(this.pos, this.localMates[i].pos);
+			let diff = Vector2.subvu(this.pos, this.localMates[i].pos);
 			let d = this.pos.dist(this.localMates[i].pos);
 			if (d == 0) {
 				d = 0.01;
 			}
-			diff.divS(d);
+			diff.div(d);
 			tmpD.add(diff);
 			total++;
 		}
 		if (total != 0) {
-			tmpD.divS(total);
+			tmpD.div(total);
 			this.seek(tmpD, this.sepFac);
 		}
 	}
 	interest(v, i) {
 		var tmpD = new Vector2(v.x, v.y);
-		let diff = Vector2.subV1V2(tmpD, this.pos);
+		let diff = Vector2.subvu(tmpD, this.pos);
 		let d = this.pos.dist(tmpD);
 		if (d < i) {
 				d = 0;
 			}
-		diff.multS(d);
+		diff.mult(d);
 		diff.sub(this.pos);
 		this.seek(diff, 0.0000078125 * (d * i));
-	}
-	seekFreewill(){
-		this.freewillVector.add(new Vector2((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100));
-		let diff = Vector2.subV1V2(this.freewillVector, this.pos);
-		let d = this.pos.dist(this.freewillVector);
-		if (d < i) {
-				d = 0;
-			}
-		diff.multS(d);
-		diff.sub(this.pos);
-		this.seek(diff, this.freewillFac / 20);
-
-		if (this.freewillVector.x > canvas.width + 1000) {
-			this.freewillVector.x = -1000;
-		}
-		if (this.freewillVector.x < -1000) {
-			this.freewillVector.x = canvas.width + 1000;
-		}
-
-		if (this.freewillVector.y > canvas.height + 1000) {
-			this.freewillVector.y = -1000;
-		}
-		if (this.freewillVector.y < -1000) {
-			this.freewillVector.y = canvas.height + 1000;
-		}
 	}
 	seek(target, fac){
 		target.setMag(this.maxspeed);
@@ -142,10 +111,6 @@ class Boid {
 			this.pos.y = canvas.height + 20;
 		}
 		this.prePos = new Vector2(this.pos.x, this.pos.y);
-		//freewill
-		if (this.freewillFac != 0) {
-			this.seekFreewill();
-		}
 		
 		// console.log(this.desire);
 		this.vel.add(this.acc);
@@ -154,21 +119,10 @@ class Boid {
 		}
 		this.pos.add(this.vel);
 		this.preVel = this.vel;
-		this.acc.multS(0);
+		this.acc.mult(0);
 	}
 	draw(shape){
 		this.update();
-		if (shape) {
-			if (this.hl) {
-				
-				drawPoint(this.pos, this.senseRadius/2, '#00000022');
-				drawSense(this.pos, this.senseRadius, this.vel, this.FOV, '#00000022');
-				drawTri(this.pos, this.vel, 15, '#FFAEBC');
-			} else {
-				drawTri(this.pos, this.vel, 15, '#A0E7E5');
-			}
-		} else {
-			drawLine(this.prePos, this.pos, '#FFFFFF');
-		}
+		drawLine(this.prePos, this.pos, 1, '#FFFFFF');
 	}
 }
