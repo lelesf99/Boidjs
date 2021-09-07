@@ -65,9 +65,12 @@ class Boid {
 
 		if (total != 0) {
 			tmpD.div(total);
+			let d = this.pos.dist(tmpD);
+
+			var arrival = map(d, 0, this.senseRadius, 0.5, 1.6);
 
 			tmpD.sub(this.pos);
-			this.seek(tmpD, this.cohFac);
+			this.seek(tmpD, this.cohFac * arrival);
 		}
 	}
 	separate() {
@@ -121,7 +124,11 @@ class Boid {
 		}
 		this.prePos = new Vector2(this.pos.x, this.pos.y);
 		
-		// console.log(this.desire);
+		// littlebit of randomness
+		this.vel.add(Vector2.randomV(0.5,0.25));
+		// slightly seek center
+		this.seek(Vector2.subvu(new Vector2(width/2, height/2), this.pos), 0.25);
+
 		this.vel.add(this.acc);
 		if (this.vel.mag() <= this.minspeed) {
 			this.vel.setMag(this.minspeed);
