@@ -1,20 +1,22 @@
 class Boid {
 	constructor(x, y, hl) {
 		this.pos = new Vector2(x, y);
-		this.prePos = this.pos;
+		this.prePos = new Vector2(this.pos.x, this.pos.y);
 		this.vel = Vector2.randomV(20, 10);
 		this.acc = new Vector2(0 ,0);
-		this.preVel = new Vector2(0 ,0);
+		this.wanderVel = Vector2.randomV(20, 10);
 		this.localMates = [];
+		this.desiredNeighbors = 10;
 		this.senseRadius = 80;
-		this.sense = new Circle(this.pos.x, this.pos.y, this.senseRadius);
 		this.FOV = 120 * Math.PI / 180;
+		this.sense = new Circle(this.pos.x, this.pos.y, this.senseRadius);
 		this.maxforce = 0.3125;
 		this.maxspeed = 8;
 		this.minspeed = this.maxspeed/2;
 		this.alFac = 1;
 		this.cohFac = 1;
 		this.sepFac = 1;
+		this.wanFac = 0.4;
 		this.hl = hl;
 	}
 	pushLocalMates(qtree, range){
@@ -31,7 +33,7 @@ class Boid {
 				(Vector2.angleBetween(Vector2.subvu(otherBoid.pos, this.pos), this.vel) < this.FOV || 
 				d <= this.senseRadius/2)
 				) {
-				if ((quadHl && link) || (shape && this.hl)) {
+				if ((link) || (shape && this.hl)) {
 					drawLine(otherBoid.pos, this.pos, 1,'#FFFFFF55');
 				}
 				return true;
@@ -39,15 +41,20 @@ class Boid {
 				return false;
 			}
 		});
+		if (this.localMates.length >= this.desiredNeighbors && this.senseRadius > 0) {
+			this.senseRadius -= 5;
+		} else {
+			this.senseRadius ++;
+		}
 	}
 	popLocalMates(){
 		this.localMates.splice(0,this.localMates.length);
 	}
 	align() {
-		var tmpD = new Vector2(0, 0);
+		let tmpD = new Vector2(0, 0);
 
-		var total = 0;
-		for (var i = this.localMates.length - 1; i >= 0; i--) {
+		let total = 0;
+		for (let i = this.localMates.length - 1; i >= 0; i--) {
 			tmpD.add(this.localMates[i].vel);
 			total++;
 		}
@@ -60,10 +67,10 @@ class Boid {
 		}
 	}
 	cohesion() {
-		var tmpD = new Vector2(0, 0);
+		let tmpD = new Vector2(0, 0);
 
-		var total = 0;
-		for (var i = this.localMates.length - 1; i >= 0; i--) {
+		let total = 0;
+		for (let i = this.localMates.length - 1; i >= 0; i--) {
 			tmpD.add(this.localMates[i].pos);
 			total++;
 		}
@@ -72,16 +79,18 @@ class Boid {
 			tmpD.div(total);
 			let d = this.pos.dist(tmpD);
 
-			var arrival = map(d, 0, this.senseRadius, 0.5, 1.6);
+			let arrival = 1;
+			if(d < this.senseRadius)
+				arrival = map(d, 0, this.senseRadius, 0.5, 1.6);
 
 			tmpD.sub(this.pos);
 			this.seek(tmpD, this.cohFac * arrival);
 		}
 	}
 	separate() {
-		var tmpD = new Vector2(0, 0);
-		var total = 0;
-		for (var i = this.localMates.length - 1; i >= 0; i--) {
+		let tmpD = new Vector2(0, 0);
+		let total = 0;
+		for (let i = this.localMates.length - 1; i >= 0; i--) {
 			let diff = Vector2.subvu(this.pos, this.localMates[i].pos);
 			let d = this.pos.dist(this.localMates[i].pos);
 			if (d == 0) {
@@ -96,8 +105,14 @@ class Boid {
 			this.seek(tmpD, this.sepFac);
 		}
 	}
+	wander(){
+		this.wanderVel.add(Vector2.randomV(1, 0.5));
+		this.wanderVel.limit(this.maxspeed);
+		let diff = Vector2.subvu(this.vel, this.wanderVel);
+		this.seek(diff, this.wanFac);
+	}
 	interest(v, i) {
-		var tmpD = new Vector2(v.x, v.y);
+		let tmpD = new Vector2(v.x, v.y);
 		let diff = Vector2.subvu(tmpD, this.pos);
 		let d = this.pos.dist(tmpD);
 		if (d < i) {
@@ -132,15 +147,14 @@ class Boid {
 		// slightly seek center
 		this.seek(Vector2.subvu(new Vector2(width/2, height/2), this.pos), 0.25);
 
-		// a bit of randomness
-		this.acc.add(Vector2.randomV(.5, 0.25));
+		// wander about
+		this.wander();
 
 		this.vel.add(this.acc);
 		if (this.vel.mag() <= this.minspeed) {
 			this.vel.setMag(this.minspeed);
 		}
 		this.pos.add(this.vel);
-		this.preVel = this.vel;
 		this.acc.mult(0);
 	}
 	draw(shape){

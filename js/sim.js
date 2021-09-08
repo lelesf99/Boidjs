@@ -11,7 +11,7 @@ let link = false;
 let trail = 55;
 let quadCap = 16;
 
-for (var i = 0; i < 1024; i++) {
+for (var i = 0; i < 2048; i++) {
 	if (i == 0) {
 		flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, true));
 	} else {

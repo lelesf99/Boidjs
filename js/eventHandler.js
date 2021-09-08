@@ -34,13 +34,12 @@ cohSlider.addEventListener('input', () => {
 });
 visSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
-		flock[i].senseRadius = Math.floor(visSlider.value);
+		flock[i].desiredNeighbors = Math.floor(visSlider.value);
 	}
 });
 fovSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
 		flock[i].FOV = fovSlider.value * Math.PI / 180;
-
 	}
 });
 spdSlider.addEventListener('input', () => {
