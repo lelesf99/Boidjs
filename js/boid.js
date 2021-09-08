@@ -7,7 +7,7 @@ class Boid {
 		this.wanderVel = Vector2.randomV(20, 10);
 		this.localMates = [];
 		this.desiredNeighbors = 10;
-		this.senseRadius = 80;
+		this.senseRadius = 20;
 		this.FOV = 120 * Math.PI / 180;
 		this.sense = new Circle(this.pos.x, this.pos.y, this.senseRadius);
 		this.maxforce = 0.3125;
@@ -18,6 +18,7 @@ class Boid {
 		this.sepFac = 1;
 		this.wanFac = 0.4;
 		this.hl = hl;
+		this.color;
 	}
 	pushLocalMates(qtree, range){
 		if (this.hl) {
@@ -41,11 +42,15 @@ class Boid {
 				return false;
 			}
 		});
-		if (this.localMates.length >= this.desiredNeighbors && this.senseRadius > 0) {
-			this.senseRadius -= 5;
+		if (this.localMates.length >= this.desiredNeighbors && this.senseRadius > 5) {
+			this.senseRadius --;
 		} else {
 			this.senseRadius ++;
 		}
+		let red = map(this.senseRadius, 120, 0, 0, 255);
+		let green = map(this.senseRadius, 60, 0, 100, 0);
+		let blue = map(this.senseRadius, 60, 0, 255, 50);
+		this.color = 'rgb( ' + red + ', ' + green + ', ' + blue + ')'
 	}
 	popLocalMates(){
 		this.localMates.splice(0,this.localMates.length);
@@ -171,9 +176,8 @@ class Boid {
 			if (this.hl) {
 				drawLine(this.prePos, this.pos, 2, '#FF0000');
 			} else {
-				drawLine(this.prePos, this.pos, 1, '#FFFFFF');
+				drawLine(this.prePos, this.pos, 1, this.color);
 			}
-			
 		}
 	}
 }

@@ -9,11 +9,11 @@ let frameCount = 0;
 let quadHl = false;
 let link = false;
 let trail = 55;
-let quadCap = 16;
+let quadCap = 32;
 
 for (var i = 0; i < 2048; i++) {
-	if (i == 0) {
-		flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, true));
+	if (i === 0) {
+		flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, false));
 	} else {
 		flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, false));
 	}
@@ -22,7 +22,7 @@ for (var i = 0; i < 2048; i++) {
 function addBoids(){
 	for (var i = 0; i < 64; i++) {
 		if (i == 0 && flock.length == 0) {
-			flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, true));
+			flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, false));
 		} else {
 			flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, false));
 		}
@@ -81,7 +81,7 @@ function animate() {
 		interest = 0;
 	}
 	if(interest >= 1) {
-		drawCircle(new Vector2(intX, intY), interest, '#FFFFFF33');
+		drawCircle(new Vector2(intX, intY), interest, '#55555522');
 	}
 	for (var i = 0; i < flock.length; i++) {
 		flock[i].draw(shape);
