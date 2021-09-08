@@ -1,5 +1,4 @@
 flock = [];
-let pres = 105;
 let intX = canvas.width/2;
 let intY = canvas.height/2;
 let interest = 0;
@@ -12,7 +11,7 @@ let trail = 55;
 let quadCap = 32;
 
 for (var i = 0; i < 2048; i++) {
-	if (i === 0) {
+	if (i == 0) {
 		flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, false));
 	} else {
 		flock.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height, false));

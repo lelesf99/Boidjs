@@ -22,8 +22,8 @@ class Circle {
         if (circleDistance.x <= (rect.w)) { return true; } 
         if (circleDistance.y <= (rect.h)) { return true; }
 
-        let cornerDistance_sq = (circleDistance.x - rect.w/2) * (circleDistance.x - rect.w/2) +
-                            (circleDistance.y - rect.h/2) * (circleDistance.y - rect.h/2);
+        let cornerDistance_sq = (circleDistance.x - rect.x) * (circleDistance.x - rect.x) +
+                            (circleDistance.y - rect.y) * (circleDistance.y - rect.y);
 
         return (cornerDistance_sq >= (this.rr));
     }
@@ -57,11 +57,18 @@ class Rect {
 	intersectsCircle(circle) {
 		return circle.intersectsBox(this);
 	}
-	show(color) {
-		offCtx.strokeStyle = color;
+	show(color, quad) {
+		
         offCtx.lineWidth = 1;
         offCtx.rect(this.x, this.y, this.w, this.h);
-        offCtx.stroke();
+		if (quad) {
+			offCtx.strokeStyle = color;
+			offCtx.stroke();
+		} else {
+			offCtx.fillStyle = color;
+			offCtx.fill();
+		}
+        
 	}
 }
 
@@ -234,9 +241,9 @@ function drawTri(pos, head, size, color) {
 	offCtx.restore();
 }
 function drawLine(a, b, s, color) {
+	offCtx.strokeStyle = color;
 	offCtx.lineWidth = s;
 	offCtx.lineCap = 'round';
-	offCtx.strokeStyle = color;
 	offCtx.beginPath();
 	offCtx.moveTo(a.x, a.y);
 	offCtx.lineTo(b.x, b.y);

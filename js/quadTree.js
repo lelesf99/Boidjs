@@ -79,8 +79,8 @@ class quadTree {
         });
 
         if (this.quad1 == null) {
-            if (show) {
-                this.bound.show('#550000');
+            if (show != undefined) {
+                this.bound.show('#55555555');
             }
             return result;
         }   
@@ -94,7 +94,7 @@ class quadTree {
     }
 
     show(color) {
-        this.bound.show(color);
+        this.bound.show(color, quad);
         if (this.quad1) this.quad1.show();
         if (this.quad2) this.quad2.show();
         if (this.quad3) this.quad3.show();

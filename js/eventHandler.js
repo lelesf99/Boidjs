@@ -5,7 +5,6 @@ let visSlider = document.querySelector('#vision');
 let fovSlider = document.querySelector('#FOV');
 let quadSlider = document.querySelector('#quad');
 let spdSlider = document.querySelector('#speed');
-let presSlider = document.querySelector('#precision');
 
 let addBtn = document.querySelector("#spawn");
 let remBtn = document.querySelector("#despawn");
@@ -45,11 +44,6 @@ fovSlider.addEventListener('input', () => {
 spdSlider.addEventListener('input', () => {
 	for (var i = 0; i < flock.length; i++) {
 		flock[i].maxspeed = Math.floor(spdSlider.value/10);
-	}
-});
-presSlider.addEventListener('input', () => {
-	for (var i = 0; i < flock.length; i++) {
-		pres = Math.floor(presSlider.value);
 	}
 });
 quadSlider.addEventListener('input', () => {

@@ -29,8 +29,7 @@ class Boid {
 		
 		this.localMates.filter((otherBoid) => {
 			let d = this.pos.dist(otherBoid.pos);
-			if (otherBoid != this && 
-				this.localMates.length <= pres && 
+			if (otherBoid != this &&  
 				(Vector2.angleBetween(Vector2.subvu(otherBoid.pos, this.pos), this.vel) < this.FOV || 
 				d <= this.senseRadius/2)
 				) {
@@ -43,11 +42,11 @@ class Boid {
 			}
 		});
 		if (this.localMates.length >= this.desiredNeighbors && this.senseRadius > 5) {
-			this.senseRadius --;
+			this.senseRadius -= 2;
 		} else {
-			this.senseRadius ++;
+			this.senseRadius += 2;
 		}
-		let red = map(this.senseRadius, 120, 0, 0, 255);
+		let red = map(this.senseRadius, 100, 0, 0, 255);
 		let green = map(this.senseRadius, 60, 0, 100, 0);
 		let blue = map(this.senseRadius, 60, 0, 255, 50);
 		this.color = 'rgb( ' + red + ', ' + green + ', ' + blue + ')'
@@ -170,11 +169,11 @@ class Boid {
 				drawSense(this.pos, this.senseRadius, this.vel, this.FOV, '#00000022');
 				drawTri(this.pos, this.vel, 15, '#FFAEBC');
 			} else {
-				drawTri(this.pos, this.vel, 15, '#A0E7E5');
+				drawTri(this.pos, this.vel, 15, this.color);
 			}
 		} else {
 			if (this.hl) {
-				drawLine(this.prePos, this.pos, 2, '#FF0000');
+				drawLine(this.prePos, this.pos, 2, '#FFFFFF');
 			} else {
 				drawLine(this.prePos, this.pos, 1, this.color);
 			}
