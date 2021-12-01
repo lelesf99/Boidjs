@@ -1,66 +1,66 @@
 class Circle {
-    constructor(x, y, r) {
-        this.x = x;
-        this.y = y;
-        this.r = r;
-        this.rr = r*r;
-    }
+	constructor(x, y, r) {
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.rr = r * r;
+	}
 	containsPoint(point) {
-        if (Vector2.distvu(point.pos, new Vector2(this.x, this.y)) <= this.r)
-            return true;
-        return false;
-    }
-    intersectsBox(rect) {
+		if (Vector2.distvu(point.pos, new Vector2(this.x, this.y)) <= this.r)
+			return true;
+		return false;
+	}
+	intersectsBox(rect) {
 		let circleDistance = new Vector2();
 
-        circleDistance.x = this.x - rect.x;
-        circleDistance.y = this.y - rect.y;
+		circleDistance.x = this.x - rect.x;
+		circleDistance.y = this.y - rect.y;
 
-        if (circleDistance.x > (rect.w + this.r) || circleDistance.x + this.r < 0) { return false; }
-        if (circleDistance.y > (rect.h + this.r) || circleDistance.y + this.r < 0) { return false; }
+		if (circleDistance.x > (rect.w + this.r) || circleDistance.x + this.r < 0) { return false; }
+		if (circleDistance.y > (rect.h + this.r) || circleDistance.y + this.r < 0) { return false; }
 
-        if (circleDistance.x <= (rect.w)) { return true; } 
-        if (circleDistance.y <= (rect.h)) { return true; }
+		if (circleDistance.x <= (rect.w)) { return true; }
+		if (circleDistance.y <= (rect.h)) { return true; }
 
-        let cornerDistance_sq = (circleDistance.x - rect.x) * (circleDistance.x - rect.x) +
-                            (circleDistance.y - rect.y) * (circleDistance.y - rect.y);
+		let cornerDistance_sq = (circleDistance.x - rect.x) * (circleDistance.x - rect.x) +
+			(circleDistance.y - rect.y) * (circleDistance.y - rect.y);
 
-        return (cornerDistance_sq >= (this.rr));
-    }
+		return (cornerDistance_sq >= (this.rr));
+	}
 	show(color) {
 		drawCircle(new Vector2(this.x, this.y), this.r, color);
 	}
 }
 
 class Rect {
-    constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-    }
+	constructor(x, y, w, h) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	}
 
-    containsPoint(point) {
-        if (point.pos.x > this.x && point.pos.x <= this.x + this.w &&
-            point.pos.y > this.y && point.pos.y <= this.y + this.h)
-            return true;
-        return false;
-    }
-    intersectsBox(other) {
-        if (other.x >= this.x + this.w ||
-            other.x + other.w < this.x ||
-            other.y >= this.y + this.h ||
-            other.y + other.h < this.y)
-            return false;
-        return true;
-    }
+	containsPoint(point) {
+		if (point.pos.x > this.x && point.pos.x <= this.x + this.w &&
+			point.pos.y > this.y && point.pos.y <= this.y + this.h)
+			return true;
+		return false;
+	}
+	intersectsBox(other) {
+		if (other.x >= this.x + this.w ||
+			other.x + other.w < this.x ||
+			other.y >= this.y + this.h ||
+			other.y + other.h < this.y)
+			return false;
+		return true;
+	}
 	intersectsCircle(circle) {
 		return circle.intersectsBox(this);
 	}
 	show(color, quad) {
-		
-        offCtx.lineWidth = 1;
-        offCtx.rect(this.x, this.y, this.w, this.h);
+
+		offCtx.lineWidth = 1;
+		offCtx.rect(this.x, this.y, this.w, this.h);
 		if (quad) {
 			offCtx.strokeStyle = color;
 			offCtx.stroke();
@@ -68,10 +68,9 @@ class Rect {
 			offCtx.fillStyle = color;
 			offCtx.fill();
 		}
-        
+
 	}
 }
-
 class Vector2 {
 	constructor(x, y) {
 		this.x = x;
@@ -82,7 +81,7 @@ class Vector2 {
 		this.y = this.y + v.y;
 		return this
 	}
-    static addvu(v, u) {
+	static addvu(v, u) {
 		return new Vector2((v.x + u.x), (v.y + u.y));
 	}
 	sub(v) {
@@ -98,15 +97,18 @@ class Vector2 {
 		this.y = this.y * k;
 		return this
 	}
+	static multvk(v, k) {
+		return new Vector2(v.x * k, v.y * k);
+	}
 	div(k) {
 		this.x = this.x / k;
 		this.y = this.y / k;
 		return this;
 	}
-	dist(v){
+	dist(v) {
 		return Math.sqrt((this.x - v.x) * (this.x - v.x) + (this.y - v.y) * (this.y - v.y));
 	}
-	static distvu(v, u){
+	static distvu(v, u) {
 		return Math.sqrt((v.x - u.x) * (v.x - u.x) + (v.y - u.y) * (v.y - u.y));
 	}
 	magSq() {
@@ -114,10 +116,10 @@ class Vector2 {
 		const y = this.y;
 		return x * x + y * y;
 	};
-	mag(){
+	mag() {
 		return Math.sqrt(this.magSq());
 	}
-	normalize(){
+	normalize() {
 		const len = this.mag();
 		if (len !== 0) this.mult(1 / len);
 		return this;
@@ -135,26 +137,26 @@ class Vector2 {
 	dot(v) {
 		return this.x * v.x + this.y * v.y;
 	};
-	static angleBetween(v1, v2){
-			return Math.acos(v1.dot(v2) / (v1.mag() * v2.mag()));
+	static angleBetween(v1, v2) {
+		return Math.acos(v1.dot(v2) / (v1.mag() * v2.mag()));
 	}
-	angle(){
-		return (this.y < 0) ? -Vector2.angleBetween(this, new Vector2(1,0)) : Vector2.angleBetween(this, new Vector2(1,0));
+	angle() {
+		return (this.y < 0) ? -Vector2.angleBetween(this, new Vector2(1, 0)) : Vector2.angleBetween(this, new Vector2(1, 0));
 	}
 	static fromVAngle(v, angle) {
-		let u = new Vector2(0,0);
+		let u = new Vector2(0, 0);
 		u.x = v.x * Math.cos(angle) - v.y * Math.sin(angle);
-		u.y =  v.x * Math.sin(angle) + v.y * Math.cos(angle);
+		u.y = v.x * Math.sin(angle) + v.y * Math.cos(angle);
 		u.setMag(1);
 		return u;
 	}
-	static randomV(amp, off) {	
+	static randomV(amp, off) {
 		return new Vector2((Math.random() * amp - off), (Math.random() * amp - off));
 	}
 }
 
 function getRandomArb(min, max) {
-  return Math.random() * (max - min) + min;
+	return Math.random() * (max - min) + min;
 }
 
 function constrain(n, low, high) {
@@ -176,11 +178,15 @@ function map(n, start1, stop1, start2, stop2, withinBounds) {
 var canvas = document.querySelector('canvas');
 var c = canvas.getContext("2d");
 
-var offCanvas = new OffscreenCanvas(window.innerWidth, window.innerHeight);
-var offCtx = offCanvas.getContext("2d");
-
 var width = window.innerWidth;
 var height = window.innerHeight;
+
+const offCanvas = document.createElement('canvas');
+offCanvas.width = width;
+offCanvas.height = height;
+var offCtx = offCanvas.getContext("2d");
+
+
 
 canvas.width = width;
 canvas.height = height;
@@ -209,7 +215,7 @@ function drawPoint(pos, r, color) {
 }
 function drawCircle(pos, r, color) {
 	offCtx.beginPath();
-	offCtx.arc(pos.x, pos.y, r, 0, Math.PI*2);
+	offCtx.arc(pos.x, pos.y, r, 0, Math.PI * 2);
 	offCtx.fillStyle = color;
 	offCtx.fill();
 	offCtx.strokeStyle = '#00000033';

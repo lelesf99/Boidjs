@@ -3,7 +3,7 @@ class Boid {
 		this.pos = new Vector2(x, y);
 		this.prePos = new Vector2(this.pos.x, this.pos.y);
 		this.vel = Vector2.randomV(20, 10);
-		this.acc = new Vector2(0 ,0);
+		this.acc = new Vector2(0, 0);
 		this.wanderVel = Vector2.randomV(20, 10);
 		this.localMates = [];
 		this.desiredNeighbors = 10;
@@ -12,47 +12,49 @@ class Boid {
 		this.sense = new Circle(this.pos.x, this.pos.y, this.senseRadius);
 		this.maxforce = 0.3125;
 		this.maxspeed = 8;
-		this.minspeed = this.maxspeed/2;
+		this.minspeed = this.maxspeed / 2;
 		this.alFac = 1;
 		this.cohFac = 1;
 		this.sepFac = 1;
-		this.wanFac = 0.4;
+		this.wanFac = .2;
 		this.hl = hl;
 		this.color;
 	}
-	pushLocalMates(qtree, range){
+	pushLocalMates(qtree, range) {
 		if (this.hl) {
 			this.localMates = qtree.query(range, undefined, true);
 		} else {
 			this.localMates = qtree.query(range);
 		}
-		
+
+		let red = map(this.senseRadius, 100, 0, 0, 255);
+		let green = map(this.senseRadius, 60, 0, 100, 0);
+		let blue = map(this.senseRadius, 60, 0, 255, 50);
+		this.color = 'rgb( ' + red + ', ' + green + ', ' + blue + ')'
+
 		this.localMates.filter((otherBoid) => {
 			let d = this.pos.dist(otherBoid.pos);
-			if (otherBoid != this &&  
-				(Vector2.angleBetween(Vector2.subvu(otherBoid.pos, this.pos), this.vel) < this.FOV || 
-				d <= this.senseRadius/2)
-				) {
+			if (otherBoid != this &&
+				(Vector2.angleBetween(Vector2.subvu(otherBoid.pos, this.pos), this.vel) < this.FOV ||
+					d <= this.senseRadius / 2)
+			) {
 				if ((link) || (shape && this.hl)) {
-					drawLine(otherBoid.pos, this.pos, 1,'#FFFFFF55');
+					drawLine(otherBoid.pos, this.pos, 1, this.color);
 				}
 				return true;
 			} else {
 				return false;
 			}
 		});
-		if (this.localMates.length >= this.desiredNeighbors && this.senseRadius > 5) {
+		if (this.localMates.length >= this.desiredNeighbors && this.senseRadius > 3) {
 			this.senseRadius -= 2;
 		} else {
-			this.senseRadius += 2;
+			this.senseRadius += 1;
 		}
-		let red = map(this.senseRadius, 100, 0, 0, 255);
-		let green = map(this.senseRadius, 60, 0, 100, 0);
-		let blue = map(this.senseRadius, 60, 0, 255, 50);
-		this.color = 'rgb( ' + red + ', ' + green + ', ' + blue + ')'
+
 	}
-	popLocalMates(){
-		this.localMates.splice(0,this.localMates.length);
+	popLocalMates() {
+		this.localMates.splice(0, this.localMates.length);
 	}
 	align() {
 		let tmpD = new Vector2(0, 0);
@@ -62,7 +64,7 @@ class Boid {
 			tmpD.add(this.localMates[i].vel);
 			total++;
 		}
-		if (total != 0 ) {
+		if (total != 0) {
 			tmpD.div(total);
 			if (this.alFac < 0.4) {
 				this.alFac = 0.4
@@ -84,7 +86,7 @@ class Boid {
 			let d = this.pos.dist(tmpD);
 
 			let arrival = 1;
-			if(d < this.senseRadius)
+			if (d < this.senseRadius)
 				arrival = map(d, 0, this.senseRadius, 0.5, 1.6);
 
 			tmpD.sub(this.pos);
@@ -109,7 +111,7 @@ class Boid {
 			this.seek(tmpD, this.sepFac);
 		}
 	}
-	wander(){
+	wander() {
 		this.wanderVel.add(Vector2.randomV(1, 0.5));
 		this.wanderVel.limit(this.maxspeed);
 		let diff = Vector2.subvu(this.vel, this.wanderVel);
@@ -120,36 +122,39 @@ class Boid {
 		let diff = Vector2.subvu(tmpD, this.pos);
 		let d = this.pos.dist(tmpD);
 		if (d < i) {
-				d = 0;
-			}
+			d = 0;
+		}
 		diff.mult(d);
 		diff.sub(this.pos);
 		this.seek(diff, 0.0000078125 * (d * i));
 	}
-	seek(target, fac){
+	seek(target, fac) {
 		target.setMag(this.maxspeed);
 		target.sub(this.vel);
 		target.limit(this.maxforce * fac);
 		this.acc.add(target);
 	}
-	update(){
-		if (this.pos.x > canvas.width + 20) {
-			this.pos.x = -20;
+	update() {
+		let center = new Vector2(width / 2, height / 2);
+		let slack = 50;
+		if (this.pos.x > canvas.width + slack) {
+			this.pos.x = -slack;
 		}
-		if (this.pos.x < -20) {
-			this.pos.x = canvas.width + 20;
+		if (this.pos.x < -slack) {
+			this.pos.x = canvas.width + slack;
 		}
 
-		if (this.pos.y > canvas.height + 20) {
-			this.pos.y = -20;
+		if (this.pos.y > canvas.height + slack) {
+			this.pos.y = -slack;
 		}
-		if (this.pos.y < -20) {
-			this.pos.y = canvas.height + 20;
+		if (this.pos.y < -slack) {
+			this.pos.y = canvas.height + slack;
 		}
 		this.prePos = new Vector2(this.pos.x, this.pos.y);
-		
+
 		// slightly seek center
-		this.seek(Vector2.subvu(new Vector2(width/2, height/2), this.pos), 0.25);
+
+		this.seek(Vector2.subvu(center, this.pos), 0.1);
 
 		// wander about
 		this.wander();
@@ -161,11 +166,11 @@ class Boid {
 		this.pos.add(this.vel);
 		this.acc.mult(0);
 	}
-	draw(shape){
+	draw(shape) {
 		this.update();
 		if (shape) {
 			if (this.hl) {
-				drawCircle(this.pos, this.senseRadius/2, '#00000022');
+				drawCircle(this.pos, this.senseRadius / 2, '#00000022');
 				drawSense(this.pos, this.senseRadius, this.vel, this.FOV, '#00000022');
 				drawTri(this.pos, this.vel, 15, '#FFAEBC');
 			} else {
